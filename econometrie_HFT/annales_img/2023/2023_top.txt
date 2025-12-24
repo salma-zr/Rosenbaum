@@ -1,0 +1,26 @@
+a baa Ta 1A |
+Otatistical finance; Kxam
+. a Tete - 2 hay eS Pra [ome _
+_ ell ee Saal
+: Soo | se - +4 ania r a) 22 ar |
+| b= oa er or eT = ae
+| a Doe -_= ; ; . is =e " "
+| _ 1) What is the market portfolio? In the CAPM model cc an
+| Be cede ot? Gre eoritnlio? Tm the CAPM model at equllbr at Wied ta
+agents made of? Give the CAPM equation for the expected return of an “gedet: Heer cdennnetane
+statistically for the validity of the CAPM? neni a. oh OOS 1
+7 ae -_-
+5 ee Cine as, ee
+a ‘ ) Def 1e the id actim 5 spa queue ; - i - i ;
+= i ola fe ator and Provide its closed form formula (without proof). What is the in- ae
+= terest of | dge estimator compared to ordinary least squares? What does Lasso mean? Define the =
+aan Lasso : estimator. What is the interest of Lasso estimator compared to Ridge? How do we choose the _ ead .: Ms
+a: regularization parameter (A) of the Ridge and Lasso estimators? Give one example of situation where : a 7
+rs | Ridge or Lasso estimators are useful in finance. : ee eee
+if 3) You work for a br okerage company, with access to an accurate database about past transactions,
+§ order flows and order books. Your mission is to build an algorithm enabling you to buy in 8 hours
+600.000 Hermes stocks and 300.000 LVMH stocks. Which mathematical tools, models and statistical
+methods do you use to build it (give mathematical formulas when needed) ? How do you implement
+and calibrate the models? What do you measure on data in the construction process? How do you
+Tun some testing procedures? (2 pages maximum)
+4) How do you assess the quality of the tick value for a given asset ?

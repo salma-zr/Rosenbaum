@@ -1,0 +1,63 @@
+\section{Annale 2023 (January 2023) --- 3h}
+
+\begin{questionbox}{Q1 --- CAPM}
+What is the market portfolio? In the CAPM model, at equilibrium, what is the portfolio of the agents made of? Give the CAPM equation for the expected return of an asset. How can one test statistically for the validity of the CAPM?
+\end{questionbox}
+
+\begin{solutionbox}{Q1}
+Identique à l'Annale 2021, Q1. \textbf{Point à maximiser en copie :} écrire clairement la \emph{Security Market Line} et définir $\beta_i=\Cov(R_i,R_M)/\Var(R_M)$, puis expliquer une procédure de test (régression + GRS ou Fama--MacBeth) et \emph{les limites} (proxy de marché).
+\end{solutionbox}
+
+\begin{questionbox}{Q2 --- Ridge / Lasso}
+Define the Ridge estimator and provide its closed form formula (without proof). What is the interest of Ridge estimator compared to ordinary least squares? What does Lasso mean? Define the Lasso estimator. What is the interest of Lasso estimator compared to Ridge? How do we choose the regularization parameter ($\lambda$) of the Ridge and Lasso estimators? Give one example of situation where Ridge or Lasso estimators are useful in finance.
+\end{questionbox}
+
+\begin{solutionbox}{Q2}
+Identique à l'Annale 2021, Q2. Bonus : mentionner \textbf{standardisation} des variables avant Ridge/Lasso (sinon la pénalité dépend des unités).
+\end{solutionbox}
+
+\begin{questionbox}{Q3 --- Algo d'exécution (broker)}
+Vous devez acheter en 8h 600\,000 actions Herm\`es et 300\,000 actions LVMH. Quels outils/modèles/statistiques ? Implémentation, calibration, mesures et tests.
+\end{questionbox}
+
+\begin{solutionbox}{Q3}
+Identique à l'Annale 2021, Q6. \textbf{Pour gagner des points :} citer explicitement un critère (Implementation Shortfall / Almgren--Chriss), un modèle de carnet (Hawkes / queue-reactive), et une métrique de validation out-of-sample.
+\end{solutionbox}
+
+\begin{questionbox}{Q4 --- Tick value}
+How do you assess the quality of the tick value for a given asset?
+\end{questionbox}
+
+\begin{solutionbox}{Q4}
+Identique à l'Annale 2021, Q7.
+\end{solutionbox}
+
+\begin{questionbox}{Q5 --- Commentaire d'article}
+Based on the elements seen in the lectures, comment in a critical way the enclosed article (no need to go through the mathematical proofs).
+\end{questionbox}
+
+\begin{solutionbox}{Q5}
+\textbf{Attention :} l'article joint varie selon l'année; ce qui est noté est la capacité à (i) résumer, (ii) relier au cours, (iii) critiquer et proposer des améliorations.
+
+\medskip
+\textbf{Plan de commentaire (structure ``copiable'' en examen).}
+\begin{enumerate}[leftmargin=*,label=\arabic*)]
+  \item \textbf{Objectif et question de recherche.} Qu'essaie de mesurer/prédire l'article ? Quel marché/données ?
+  \item \textbf{Données et prétraitements.} Horizon, fréquence, nettoyage, biais (survivorship, microstructure).
+  \item \textbf{Modèle / méthode.} Hypothèses, variables, équations clés, estimation/calibration.
+  \item \textbf{Résultats principaux.} Signes, ordres de grandeur, robustesse.
+  \item \textbf{Forces.} Simplicité, interprétabilité, lien microstructure, performance out-of-sample, etc.
+  \item \textbf{Faiblesses/limites.} Hypothèses fortes, endogénéité, surapprentissage, manque de tests, instabilité de paramètres, coût de transaction ignoré.
+  \item \textbf{Extensions.} Ajouter frictions, régimes, multi-actifs, backtest exécution, benchmarks, tests statistiques (Diebold--Mariano), incertitude paramètres.
+\end{enumerate}
+
+\medskip
+\textbf{Checklist ``critique quantitative''.}
+\begin{itemize}[leftmargin=*]
+  \item Quelle est la \textbf{métrique} (MSE, loglik, Sharpe, IS) ? Est-elle alignée avec l'objectif ?
+  \item Quelle est la \textbf{baseline} (naïf/VWAP/BS/Heston) ?
+  \item Robustesse : autres périodes, autres actifs, autres fréquences, \textbf{coûts} et \textbf{impact}.
+  \item Significativité : intervalles de confiance, tests de stabilité, multiple testing.
+\end{itemize}
+\end{solutionbox}
+

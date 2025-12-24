@@ -1,0 +1,146 @@
+\section{Annale 2022 (29 March 2022) --- 2h}
+
+\begin{questionbox}{Q1 --- Markowitz}
+State Markowitz optimization problem and solve it.
+\end{questionbox}
+
+\begin{solutionbox}{Q1}
+\textbf{Notations.} $N$ actifs risqués, rendements $R\in\R^N$, $\mu=\E[R]$, $\Sigma=\Cov(R)$ (symétrique définie positive). Un portefeuille est $w\in\R^N$ avec contrainte budget $w^\trans \1 = 1$. Rendement portefeuille $R_p=w^\trans R$.
+
+\medskip
+\textbf{Problème Markowitz (frontière efficiente sans actif sans risque).} Pour un rendement cible $\mu_p$ :
+\[
+\min_{w\in\R^N}\quad w^\trans \Sigma w
+\quad\text{s.c.}\quad
+w^\trans \mu=\mu_p,\ \ w^\trans \1=1.
+\]
+
+\medskip
+\textbf{Résolution par multiplicateurs de Lagrange.} Lagrangien
+\[
+\mathcal{L}(w,\lambda,\gamma)=w^\trans\Sigma w - \lambda(w^\trans\mu-\mu_p) - \gamma(w^\trans\1-1).
+\]
+Condition du premier ordre : $2\Sigma w - \lambda\mu - \gamma \1=0$, donc
+\[
+w=\tfrac12 \Sigma^{-1}(\lambda\mu+\gamma\1).
+\]
+En notant
+\[
+A=\1^\trans \Sigma^{-1}\1,\quad
+B=\1^\trans \Sigma^{-1}\mu,\quad
+C=\mu^\trans \Sigma^{-1}\mu,\quad
+\Delta=AC-B^2\ (>0),
+\]
+on impose les deux contraintes et on obtient
+\[
+\lambda = 2\,\frac{A\mu_p-B}{\Delta},
+\qquad
+\gamma = 2\,\frac{C-B\mu_p}{\Delta}.
+\]
+Donc la solution s'écrit
+\[
+w^\star(\mu_p)=\Sigma^{-1}\Big(\frac{A\mu_p-B}{\Delta}\,\mu + \frac{C-B\mu_p}{\Delta}\,\1\Big).
+\]
+
+\medskip
+\textbf{Deux portefeuilles ``fondamentaux''.} On peut réécrire la frontière comme combinaison de
+\[
+w_{\mathrm{GMV}}:=\frac{\Sigma^{-1}\1}{\1^\trans\Sigma^{-1}\1}\quad\text{(variance minimale globale)},
+\qquad
+w_{\mu}:=\frac{\Sigma^{-1}\mu}{\1^\trans\Sigma^{-1}\mu},
+\]
+et toute solution efficiente est combinaison affine de ces deux-là.
+\end{solutionbox}
+
+\begin{questionbox}{Q2 --- Ridge / Lasso}
+Define the Ridge estimator and provide its closed form formula with proof. What is the interest of Ridge estimator compared to ordinary least squares? Define the Lasso estimator. What is the interest of Lasso estimator compared to Ridge? How do we choose the regularization parameter ($\lambda$) of the Ridge and Lasso estimators? Give one example of situation where Ridge or Lasso estimators are useful in finance.
+\end{questionbox}
+
+\begin{solutionbox}{Q2}
+\textbf{Définition Ridge.} (mêmes notations qu'en 2021)
+\[
+\hat\beta^{\mathrm{R}}(\lambda)=\argmin_\beta \|y-X\beta\|_2^2+\lambda\|\beta\|_2^2.
+\]
+\textbf{Preuve de la formule fermée.} Développer :
+\[
+f(\beta)= (y-X\beta)^\trans(y-X\beta)+\lambda\beta^\trans\beta.
+\]
+Gradient :
+\[
+\nabla f(\beta) = -2X^\trans(y-X\beta)+2\lambda\beta = 2(X^\trans X+\lambda I)\beta -2X^\trans y.
+\]
+Égaler à zéro donne $(X^\trans X+\lambda I)\beta=X^\trans y$, donc
+\[
+\hat\beta^{\mathrm{R}}(\lambda)=(X^\trans X+\lambda I)^{-1}X^\trans y.
+\]
+Comme $X^\trans X+\lambda I \succ 0$ si $\lambda>0$, la solution est unique.
+
+\medskip
+\textbf{Lasso, intérêts, choix de $\lambda$, exemples :} identiques au corrigé 2021 (Q2) ; ici insister sur \textbf{très grande dimension} ($p$ proche/plus grand que $n$) typique des signaux HFT / order-flow features.
+\end{solutionbox}
+
+\begin{questionbox}{Q3 --- Mar\v{c}enko--Pastur}
+State the Marcenko--Pastur theorem (no need do give the density, just call it $L$). How can this result be used in finance?
+\end{questionbox}
+
+\begin{solutionbox}{Q3}
+Voir Annale 2021, Q4. Ici, préciser qu'en finance on applique souvent le raisonnement aux \textbf{corrélations} empiriques et qu'on fait du \textbf{shrinkage non-linéaire} (remplacement des valeurs propres bruitées par une courbe lissée) pour stabiliser les portefeuilles.
+\end{solutionbox}
+
+\begin{questionbox}{Q4 --- Black--Scholes et drift}
+In the Black--Scholes model, how does the option price evolve with the drift? Connect this with statistical estimation of the drift from historical data.
+\end{questionbox}
+
+\begin{solutionbox}{Q4}
+Voir Annale 2021, Q5. Une phrase ``bonus'' : \textbf{le drift estimé} est utile surtout pour des problèmes \emph{d'investissement} (allocation, Kelly, prévision) mais \textbf{pas} pour le pricing BS.
+\end{solutionbox}
+
+\begin{questionbox}{Q5 --- Qualité d'un modèle de carnet}
+How do you assess the quality of an order book model. Give detailed explanations and examples.
+\end{questionbox}
+
+\begin{solutionbox}{Q5}
+\textbf{1) Que veut-on modéliser ?} Selon l'usage, un ``bon'' modèle n'est pas le même.
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Pricing microstructure} : dynamique du mid/price impact.
+  \item \textbf{Exécution} : probabilité de fill, adverse selection, distribution des temps d'attente.
+  \item \textbf{Simulation} : reproduction de stylized facts (spread, profondeur, clustering).
+\end{itemize}
+
+\medskip
+\textbf{2) Critères quantitatifs.}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Fit in-sample} : log-vraisemblance (processus ponctuels), AIC/BIC, résidus.
+  \item \textbf{Validation out-of-sample} : prédire les intensités d'arrivées d'ordres, la distribution des inter-arrivées, la direction du prochain trade, etc.
+  \item \textbf{Calibration stability} : paramètres stables par jour/régime ? Sensibilité aux périodes.
+  \item \textbf{Reproduction de faits stylisés} : loi des volumes, asymétrie bid/ask, U-shape intraday, ``long memory'' des signes, clustering de volatilité.
+\end{itemize}
+
+\medskip
+\textbf{3) Exemples de tests.}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Point process} : test de transformation temps-rescaling (si intensité correcte, les temps transformés sont i.i.d.\ Exp(1)).
+  \item \textbf{Backtest d'exécution} : simuler une stratégie (limit/market) sur carnet simulé vs vrai carnet ; comparer slippage et taux de fill.
+  \item \textbf{Queueing} : comparer distribution des tailles de files et des temps de passage de niveau.
+\end{itemize}
+
+\medskip
+\textbf{4) Critère ultime : adéquation à l'usage.} Un modèle très bon en log-vraisemblance peut être mauvais pour l'exécution (par ex.\ sous-estimer l'adverse selection). Toujours conclure par ``\emph{on valide la métrique qui compte pour l'objectif}''.
+\end{solutionbox}
+
+\begin{questionbox}{Q6 --- Tick value}
+How do you assess the quality of the tick value for a given asset ?
+\end{questionbox}
+
+\begin{solutionbox}{Q6}
+Voir Annale 2021, Q7. Ajouter : on peut mesurer le \textbf{coût implicite du tick} via la part de trades au best vs inside-spread (si tick trop grand, beaucoup de trades au best et spread souvent à 1 tick mais trop cher en \% du prix).
+\end{solutionbox}
+
+\begin{questionbox}{Q7 --- Rough volatility}
+From a time series of prices (high frequency data over several years), how would you show that volatility is rough? What are the advantages of rough models compared to classical models used for options? What are the microstructural foundations of rough volatility? Summarize how this can be shown mathematically.
+\end{questionbox}
+
+\begin{solutionbox}{Q7}
+Voir Annale 2021, Q8. Ici, bien mentionner \textbf{la robustesse empirique} : $H<1/2$ observé sur de nombreux actifs, et \textbf{le lien marché impact} : l'ordre flow auto-excité produit des variations ``nerveuses'' de l'intensité d'activité, transmise à la volatilité.
+\end{solutionbox}
+

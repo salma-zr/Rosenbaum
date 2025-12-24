@@ -1,0 +1,36 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{margin=2.2cm}
+
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!55!black,urlcolor=blue!55!black}
+\usepackage[most]{tcolorbox}
+\tcbset{enhanced,sharp corners,boxrule=0.4pt,left=1.2ex,right=1.2ex,top=0.8ex,bottom=0.8ex}
+\newtcolorbox{recapbox}[1]{colback=yellow!7,colframe=yellow!45!black,title={À connaître par cœur --- #1}}
+
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\mathbb{V}\mathrm{ar}}
+\newcommand{\Cov}{\mathbb{C}\mathrm{ov}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\1}{\mathbf{1}}
+\newcommand{\trans}{\mathsf{T}}
+\newcommand{\argmin}{\mathop{\mathrm{arg\,min}}}
+
+\title{Fiche récap --- Finance statistique / Économétrie HFT}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\input{sections/fiche_recap}
+\end{document}
+

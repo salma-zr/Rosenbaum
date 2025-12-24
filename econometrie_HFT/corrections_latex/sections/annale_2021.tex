@@ -1,0 +1,319 @@
+\section{Annale 2021 (11 January 2021) --- 2h}
+
+\begin{questionbox}{Q1 --- CAPM}
+What is the market portfolio? In the CAPM model, at equilibrium, what is the portfolio of the agents made of? Give the CAPM equation for the expected return of an asset. How can one test statistically for the validity of the CAPM?
+\end{questionbox}
+
+\begin{solutionbox}{Q1}
+\textbf{(a) Marché et portefeuille de marché.} On considère $N$ actifs risqués avec rendements aléatoires $R\in\R^N$, espérance $\mu=\E[R]$ et matrice de covariance $\Sigma=\Cov(R)$. Le \emph{portefeuille de marché} (market portfolio) est le portefeuille \textbf{agrégé} détenu par tous les investisseurs (pondérations proportionnelles aux capitalisations dans le cas ``tous les actifs financiers'').
+
+\medskip
+\textbf{(b) Hypothèses CAPM (version standard).} Investisseurs mean--variance, même horizon, mêmes croyances $(\mu,\Sigma)$, possibilité d'emprunter/prêter au taux sans risque $r_f$, marchés frictionless.
+
+\medskip
+\textbf{(c) Portefeuille optimal des agents à l'équilibre.} Avec un actif sans risque, la frontière efficiente devient la \emph{Capital Market Line}. Chaque agent détient une combinaison
+\[
+w^{(i)} = a_i\, w_M + (1-a_i)\, w_f,
+\]
+où $w_M$ est le portefeuille tangent (qui coïncide à l'équilibre avec le portefeuille de marché), et $w_f$ correspond à l'actif sans risque. \textbf{Seul le levier $a_i$ change} avec l'aversion au risque.
+
+\medskip
+\textbf{(d) Équation CAPM (Security Market Line).} Pour chaque actif $i$,
+\[
+\E[R_i] - r_f = \beta_i\big(\E[R_M]-r_f\big),
+\qquad
+\beta_i := \frac{\Cov(R_i,R_M)}{\Var(R_M)}.
+\]
+Forme vectorielle : $\mu - r_f\1 = \beta\,(\mu_M-r_f)$ avec $\beta=\Sigma w_M / (w_M^\trans \Sigma w_M)$.
+
+\medskip
+\textbf{Intuition.} Le marché ne rémunère \emph{que le risque systématique} (corrélé au facteur de marché $R_M$). Le risque idiosyncratique est diversifiable donc non rémunéré.
+
+\medskip
+\textbf{(e) Comment tester empiriquement le CAPM ?} Deux familles classiques.
+\begin{enumerate}[leftmargin=*,label=\arabic*)]
+  \item \textbf{Test time-series (régressions de marché).} Estimer pour chaque actif (ou portefeuille) :
+  \[
+  R_{i,t}-r_{f,t} = \alpha_i + \beta_i\,(R_{M,t}-r_{f,t}) + \varepsilon_{i,t}.
+  \]
+  Le CAPM prédit \textbf{$\alpha_i=0$} pour tous les $i$ (une fois les facteurs bien spécifiés) et une relation stable des $\beta_i$.
+  On teste conjointement $\alpha=0$ via le \textbf{test GRS} (Gibbons--Ross--Shanken) sur un ensemble d'actifs/portefeuilles.
+
+  \item \textbf{Test cross-section (Fama--MacBeth).} Étape 1 : estimer $\hat\beta_i$ en série temporelle. Étape 2 : chaque date $t$,
+  \[
+  \bar R_{i,t} \approx \gamma_{0,t} + \gamma_{1,t}\,\hat\beta_i + u_{i,t},
+  \]
+  puis on teste si $\E[\gamma_{1,t}]>0$ et si la relation est linéaire, avec erreurs robustes (Newey--West).
+\end{enumerate}
+
+\medskip
+\textbf{Points critiques (à mentionner).}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Proxy du marché} (indice) et actifs non-tradables $\Rightarrow$ biais.
+  \item \textbf{Instabilité des $\beta$} à haute fréquence / régimes.
+  \item \textbf{Anomalies} : size, value, momentum $\Rightarrow$ multi-factor (Fama--French, Carhart).
+  \item \textbf{Erreurs de mesure} : $\hat\beta$ bruitée $\Rightarrow$ atténuation (errors-in-variables).
+\end{itemize}
+\end{solutionbox}
+
+\begin{questionbox}{Q2 --- Ridge / Lasso}
+Define the Ridge estimator and provide its closed form formula (without proof). What is the interest of Ridge estimator compared to ordinary least squares? What does Lasso mean? Define the Lasso estimator. What is the interest of Lasso estimator compared to Ridge? How do we choose the regularization parameter ($\lambda$) of the Ridge and Lasso estimators? Give one example of situation where Ridge or Lasso estimators are useful in finance.
+\end{questionbox}
+
+\begin{solutionbox}{Q2}
+\textbf{Cadre.} Modèle linéaire : $y\in\R^n$, $X\in\R^{n\times p}$, $y=X\beta+\varepsilon$, $\E[\varepsilon]=0$, $\Var(\varepsilon)=\sigma^2 I$.
+
+\medskip
+\textbf{OLS (rappel).} Si $X^\trans X$ inversible :
+\[
+\hat\beta^{\mathrm{OLS}}=(X^\trans X)^{-1}X^\trans y.
+\]
+Problèmes : multicolinéarité, $p$ grand, instabilité (variance élevée).
+
+\medskip
+\textbf{Ridge (Tikhonov).} Définition :
+\[
+\hat\beta^{\mathrm{R}}(\lambda) := \argmin_{\beta\in\R^p}\;\|y-X\beta\|_2^2 + \lambda \|\beta\|_2^2,\qquad \lambda\ge 0.
+\]
+Formule fermée :
+\[
+\hat\beta^{\mathrm{R}}(\lambda) = (X^\trans X + \lambda I_p)^{-1} X^\trans y.
+\]
+\textbf{Intérêt vs OLS.} Biais contrôlé mais \textbf{variance fortement réduite} $\Rightarrow$ meilleur MSE, solution définie même si $X^\trans X$ singulière, stabilise quand prédicteurs très corrélés.
+
+\medskip
+\textbf{Lasso (\underline{L}east \underline{A}bsolute \underline{S}hrinkage and \underline{S}election \underline{O}perator).} Définition :
+\[
+\hat\beta^{\mathrm{L}}(\lambda) := \argmin_{\beta\in\R^p}\;\frac12\|y-X\beta\|_2^2 + \lambda \|\beta\|_1,\qquad \lambda\ge 0.
+\]
+\textbf{Différence clé.} La pénalité $\ell_1$ induit de la \textbf{sparsité} : beaucoup de coefficients estimés \emph{exactement} à zéro $\Rightarrow$ sélection de variables (interprétabilité).
+
+\medskip
+\textbf{Ridge vs Lasso (pros/cons).}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Ridge} : bon quand beaucoup de variables ont un effet petit mais non nul; gère bien la colinéarité; pas de sélection (coefficients rarement nuls).
+  \item \textbf{Lasso} : sélection automatique; peut être instable sous forte colinéarité (choisit arbitrairement une variable parmi un groupe).
+  \item \textbf{Elastic Net} : mélange $\ell_1+\ell_2$ pour combiner sparsité et stabilité.
+\end{itemize}
+
+\medskip
+\textbf{Choisir $\lambda$.} Méthodes standard :
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Cross-validation} (K-fold) sur l'erreur de prédiction (MSE, out-of-sample $R^2$).
+  \item \textbf{Information criteria} (AIC/BIC) ou variantes pour pénalisations.
+  \item \textbf{Choix ``théoriques''} : $\lambda \asymp \sigma\sqrt{\log(p)/n}$ (Lasso) sous hypothèses de parcimonie.
+  \item \textbf{En finance} : validation \emph{chronologique} (walk-forward) pour respecter la temporalité et éviter le leakage.
+\end{itemize}
+
+\medskip
+\textbf{Exemples en finance.}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Prévision de rendements} avec beaucoup de signaux (techniques/fondamentaux) : $p$ grand $\Rightarrow$ régularisation.
+  \item \textbf{Modèles multi-facteurs} (construction de facteurs, sélection de facteurs).
+  \item \textbf{Forecast de volatilité} à partir de nombreuses variables (réalisées, order flow, macro).
+  \item \textbf{Yield curve} : régressions avec maturités corrélées (Ridge) ou sélection de maturités (Lasso).
+\end{itemize}
+\end{solutionbox}
+
+\begin{questionbox}{Q3 --- PCA}
+In the PCA of a cloud of data points in $\R^p$ given by the $n\times p$ array $X$, how does one build the best sub-vector space of $\R^p$ with dimension $k$ to project the array?
+\end{questionbox}
+
+\begin{solutionbox}{Q3}
+\textbf{Objectif PCA.} Trouver un sous-espace $S\subset\R^p$, $\dim(S)=k$, tel que la projection orthogonale de $X$ sur $S$ minimise l'erreur de reconstruction.
+
+\medskip
+\textbf{Prétraitement.} Centrer (et souvent réduire) les colonnes : $X_c = X - \1 m^\trans$ où $m=\frac1n X^\trans \1$.
+
+\medskip
+\textbf{Problème d'optimisation (forme projection).} Pour un projecteur orthogonal $P$ de rang $k$ :
+\[
+\min_{P:\,P^2=P,\;P^\trans=P,\;\mathrm{rank}(P)=k}\ \|X_c - X_c P\|_F^2.
+\]
+
+\medskip
+\textbf{Solution via SVD / valeurs propres.} Matrice de covariance empirique :
+\[
+\hat\Sigma=\frac1n X_c^\trans X_c.
+\]
+Soient $(v_1,\dots,v_p)$ des vecteurs propres orthonormés de $\hat\Sigma$ associés aux valeurs propres décroissantes $\hat\lambda_1\ge\cdots\ge\hat\lambda_p\ge 0$.
+Alors le meilleur sous-espace est
+\[
+S^\star=\mathrm{span}(v_1,\dots,v_k).
+\]
+La projection des données sur les $k$ premières composantes est $Z = X_c V_k$ où $V_k=[v_1\ \cdots\ v_k]$.
+
+\medskip
+\textbf{Interprétation.} Les composantes principales maximisent la variance projetée :
+\[
+v_1=\argmax_{\|v\|_2=1}\ v^\trans \hat\Sigma v,\quad
+v_2=\argmax_{\substack{\|v\|_2=1\\ v\perp v_1}} v^\trans \hat\Sigma v,\ \dots
+\]
+et l'erreur minimale vaut $\sum_{j=k+1}^p \hat\lambda_j$ (variance non expliquée).
+\end{solutionbox}
+
+\begin{questionbox}{Q4 --- Mar\v{c}enko--Pastur}
+State the Marcenko--Pastur theorem (no need to give the density, just call it $L$). How can this result be used in finance?
+\end{questionbox}
+
+\begin{solutionbox}{Q4}
+\textbf{Cadre.} $X\in\R^{n\times p}$ a des lignes i.i.d.\ centrées, covariance vraie $\Sigma=I_p$ (cas ``blanc'') et moments adaptés. On définit la covariance empirique
+\[
+S=\frac1n X^\trans X.
+\]
+On prend $n,p\to\infty$ avec $p/n\to c\in(0,\infty)$.
+
+\medskip
+\textbf{Théorème de Mar\v{c}enko--Pastur.} La mesure spectrale empirique de $S$ (distribution des valeurs propres) converge faiblement vers une loi limite $L_c$ (loi MP) supportée sur
+\[
+\big[(1-\sqrt c)^2,\ (1+\sqrt c)^2\big]
+\]
+(et une masse en 0 si $c>1$). Intuition : même si la covariance vraie est $I$, le spectre empirique n'est pas concentré en 1 quand $p$ est du même ordre que $n$.
+
+\medskip
+\textbf{Usage en finance.}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Nettoyage de matrices de covariance} (portfolio / risk). Dans les grands univers, les petites valeurs propres de la covariance empirique sont dominées par le bruit \`a la MP. On ``shrink'' / coupe les valeurs propres dans la ``bulk'' MP et on conserve seulement les facteurs (valeurs propres au-dessus du bord supérieur).
+  \item \textbf{Détection de facteurs.} Si certaines valeurs propres de $S$ dépassent significativement $(1+\sqrt c)^2$, cela suggère une structure non blanche (facteurs de marché/secteur).
+  \item \textbf{Stabilité Markowitz.} Explique pourquoi l'optimisation moyenne-variance sur covariance brute donne des poids extrêmes : l'inversion de $S$ amplifie les erreurs sur petites valeurs propres.
+\end{itemize}
+\end{solutionbox}
+
+\begin{questionbox}{Q5 --- Black--Scholes et drift}
+In the Black--Scholes model, how does the option price evolve with the drift? Connect this with statistical estimation of the drift from historical data.
+\end{questionbox}
+
+\begin{solutionbox}{Q5}
+\textbf{Modèle sous mesure réelle.} $dS_t=\mu S_t\,dt+\sigma S_t\,dW_t$.
+
+\medskip
+\textbf{Prix d'option (principe fondamental).} En absence d'arbitrage et marchés complets, le prix s'écrit sous la mesure risque-neutre $\mathbb{Q}$ :
+\[
+V_0 = e^{-rT}\E^{\mathbb{Q}}\big[\Phi(S_T)\big],
+\]
+où sous $\mathbb{Q}$, $dS_t=r S_t\,dt+\sigma S_t\,dW_t^{\mathbb{Q}}$.
+\textbf{Conclusion :} le prix $V_0$ \textbf{ne dépend pas de $\mu$}, il dépend de $(r,\sigma)$ (et dividendes).
+
+\medskip
+\textbf{Lien avec l'estimation statistique du drift.}
+\begin{itemize}[leftmargin=*]
+  \item Le drift est notoirement \textbf{difficile à estimer} : pour des rendements $R_{\Delta}\approx \mu\Delta+\sigma\sqrt{\Delta}Z$, le signal $\mu\Delta$ est dominé par le bruit $\sigma\sqrt{\Delta}$ quand $\Delta$ est petit. Le ratio signal/bruit vaut $\frac{\mu\Delta}{\sigma\sqrt{\Delta}}=\frac{\mu}{\sigma}\sqrt{\Delta}\to 0$.
+  \item Donc même avec beaucoup de données haute fréquence, on n'améliore pas l'estimation de $\mu$ aussi vite qu'on pourrait le croire (microstructure + bruit).
+  \item Pour le pricing, on n'a \emph{pas besoin} de $\mu$ : on utilise la mesure risque-neutre, et on calibre $\sigma$ (ou surface de volatilité) sur les prix d'options.
+\end{itemize}
+\end{solutionbox}
+
+\begin{questionbox}{Q6 --- Algo d'exécution (broker)}
+Vous devez acheter en 8h 600\,000 actions Herm\`es et 300\,000 actions LVMH \`a partir de transactions / order flow / carnets. Quels outils (modèles/statistiques) utilisez-vous ? Calibration, mesures sur données, tests (2 pages max).
+\end{questionbox}
+
+\begin{solutionbox}{Q6}
+\textbf{Traduction du problème.} Exécution optimale avec contraintes de temps, de risque (variance du coût), et d'impact marché. On veut minimiser un critère de type
+\[
+\min_{\text{stratégie}}\ \E[\text{coût}] + \eta\,\Var(\text{coût}),
+\]
+où $\eta$ reflète l'aversion au risque d'exécution.
+
+\medskip
+\textbf{1) Mesures de base à partir des données.}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Liquidité} : spread, profondeur (volume) aux meilleurs niveaux, courbe d'impact empirique (slippage vs participation), volumes échangés par pas de temps.
+  \item \textbf{Volatilité intrajournalière} et profils (U-shape).
+  \item \textbf{Microstructure} : autocorrélations des signes, déséquilibre (imbalance) du carnet, intensités d'arrivée/annulation.
+\end{itemize}
+
+\medskip
+\textbf{2) Modèle d'impact + exécution optimale (Almgren--Chriss).}
+\begin{itemize}[leftmargin=*]
+  \item Trajectoire d'inventaire $q_t$ (actions restantes), contrôle $v_t=-\dot q_t$.
+  \item Impact \emph{temporaire} (coût de traverser le carnet) et \emph{permanent} (déplacement du mid) :
+  \[
+  dS_t = \sigma\,dW_t + g(v_t)\,dt,\qquad \text{coût} \approx \int_0^T \big( \underbrace{h(v_t)}_{\text{temporaire}} + \underbrace{g(v_t) q_t}_{\text{permanent}} \big)\,dt.
+  \]
+  \item Résout un problème de contrôle stochastique; donne une politique proche de ``VWAP modifié'' (plus agressif si risque/volatilité élevé, plus doux si impact élevé).
+\end{itemize}
+
+\medskip
+\textbf{3) Modèles de carnet (HFT) si on veut agir au niveau des ordres limites.}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Processus ponctuels} (Poisson/Hawkes) pour arrivées d'ordres marché/limites/annulations.
+  \item \textbf{Queue-reactive} (Markov) : état = tailles de files aux meilleures limites; intensités dépendant de l'état.
+  \item Objectif : estimer la probabilité d'exécution d'un ordre limite, le risque de sélection adverse, et optimiser le mix market/limit.
+\end{itemize}
+
+\medskip
+\textbf{4) Calibration.} Estimer $g,h$ sur données (régression du slippage sur participation, non-linéarités), estimer intensités Hawkes via maximum de vraisemblance, valider sur périodes hors-échantillon.
+
+\medskip
+\textbf{5) Backtests / tests.} Toujours comparer à des benchmarks :
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Benchmarks} : VWAP, TWAP, POV (percentage of volume), Implementation Shortfall.
+  \item \textbf{Metrics} : coût moyen (bps), variance, tail risk (CVaR), taux de complétion, drawdown intrajournalier, exposition à l'impact permanent.
+  \item \textbf{Stress tests} : journées volatiles, annonces, liquidité basse.
+  \item \textbf{AB tests} / replay du carnet si disponible.
+\end{itemize}
+\end{solutionbox}
+
+\begin{questionbox}{Q7 --- Tick value}
+How do you assess the quality of the tick value for a given asset?
+\end{questionbox}
+
+\begin{solutionbox}{Q7}
+\textbf{Idée.} Le tick (pas de cotation) structure la microstructure. S'il est \textbf{trop grand} : spreads ``collants'', coûts de transaction élevés, compétition sur le temps (queueing) plutôt que sur le prix. S'il est \textbf{trop petit} : carnet ``vide'', surenchère de quotes, flickering, coûts technologiques.
+
+\medskip
+\textbf{Mesures pratiques.}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Spread en ticks} : $\text{spread}/\text{tick}$. Un actif ``bien tické'' a souvent un spread typiquement 1--2 ticks (mais dépend du marché).
+  \item \textbf{Profondeur au meilleur} : volume moyen au best bid/ask; sensibilité au déséquilibre.
+  \item \textbf{Coût effectif} (effective spread) : $2|P_{\text{trade}}-M_t|$ et \textbf{réversion} post-trade (adverse selection).
+  \item \textbf{Résilience} : vitesse de reconstitution après un choc (mesurable via temps de retour de la profondeur/spread).
+  \item \textbf{Mesure d'efficience} : variance ratio, autocorrélation des returns à très court terme, part de bruit microstructurel.
+\end{itemize}
+
+\medskip
+\textbf{Décision.} On cherche un tick qui équilibre : (i) compétitivité du spread, (ii) profondeur/resilience, (iii) stabilité du carnet, (iv) qualité de la découverte des prix.
+\end{solutionbox}
+
+\begin{questionbox}{Q8 --- Rough volatility}
+From a time series of prices (high frequency data over several years), how would you show that volatility is rough? What are the advantages of rough models compared to classical models used for options? What are the microstructural foundations of rough volatility? Summarize how this can be shown mathematically.
+\end{questionbox}
+
+\begin{solutionbox}{Q8}
+\textbf{(a) Montrer la ``roughness'' sur données.} On ne voit pas directement $\sigma_t$ ; on construit un proxy de volatilité (réalisée).
+\begin{itemize}[leftmargin=*]
+  \item Calculer \textbf{volatilité réalisée} sur fenêtres $\Delta$ : $RV_{t,\Delta}=\sum_{j=1}^{m} r_{t+j\delta}^2$ avec $\delta$ très petit et $m\delta=\Delta$.
+  \item Travailler sur $\log RV_{t,\Delta}$ (plus proche d'un processus gaussien).
+  \item Estimer la loi d'échelle du \textbf{variogramme} :
+  \[
+  \mathcal{V}(h)=\E\big[(\log RV_{t+h}-\log RV_t)^2\big] \approx C\,h^{2H}
+  \]
+  sur une plage d'échelles (minutes à jours). On fait une régression $\log \widehat{\mathcal{V}}(h)$ vs $\log h$; la pente donne $2H$.
+  \item Rough volatility $\iff H\in(0,1/2)$ (typiquement $H\approx 0.1$).
+\end{itemize}
+
+\medskip
+\textbf{(b) Pourquoi les modèles rough sont meilleurs (options).}
+\begin{itemize}[leftmargin=*]
+  \item Ils reproduisent mieux \textbf{la pente du smile} à court terme et la \textbf{dynamique} des surfaces de volatilité.
+  \item Meilleure description des \textbf{autocorrélations} de la volatilité (mémoire).
+  \item En calibration, ils capturent la régularité observée sans imposer une diffusion Markovienne trop lisse.
+\end{itemize}
+
+\medskip
+\textbf{(c) Fondations microstructurelles (idée).} L'activité de marché (arrivées d'ordres) est auto-excitée et proche d'un régime critique.
+\begin{itemize}[leftmargin=*]
+  \item Modéliser les ordres (buy/sell) par des \textbf{Hawkes} presque instables (branching ratio proche de 1).
+  \item Dans une limite d'échelle (temps s'accélère), l'impact agrégé de l'ordre flow converge vers un \textbf{processus Volterra} (fractional/rough) pour la volatilité.
+\end{itemize}
+
+\medskip
+\textbf{(d) Forme mathématique rough (exemple).} Un modèle type rBergomi :
+\[
+v_t = \xi_0(t)\exp\Big(\eta\,W_t^{H} - \tfrac12\eta^2 t^{2H}\Big),
+\qquad
+W_t^H=\int_0^t K_H(t-s)\,dW_s,\quad K_H(u)\propto u^{H-\frac12}.
+\]
+Le noyau singulier $u^{H-1/2}$ rend $v$ ``rough'' si $H<1/2$.
+\end{solutionbox}
+
