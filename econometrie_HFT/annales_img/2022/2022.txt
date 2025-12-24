@@ -1,0 +1,24 @@
+Auer
+Statistical finance: Exam
+2 hours-No document allowed
+29 March 2022
+1) State Markowitz optimization problem and solve it.
+u Define the Ridge estimator and provide its closed form formula with proof. What is the interest of
+Ridge estimator compared to ordinary least squares ? Define the Lasso estimator. What is the interest
+se Lasso estimator compared to Ridge? How do we choose the regularization parameter (A) of the
+Ridge and Lasso estimators ? Give one example of situation where Ridge or Lasso estimators are useful
+in finance, Fr |
+3) State the Marcenko-Pastur theorem (no need do give the density of the Marcenko-Pastur law, just
+call it L). How can this result be used in finance ?
+4) In the Black-Scholes model, how does the option price evolve with the drift ? Connect this with
+statistical estimation of the drift from historical data.
+5) How do you assess the quality of an order book model. Give detailed explanations and examples.
+6) How do you assess the quality of the tick value for a given asset ?
+t) From a time series of prices (high frequency data over several years), how would you show that
+volatility is rough? What are the advantages of rough models compared to classical models used for
+options ? What are the microstructural foundations of rough volatility ? Summarize how this b
+shown mathematically ———__ ree
+y x (® ) )
+( P :
+a LA Cat)
+F L

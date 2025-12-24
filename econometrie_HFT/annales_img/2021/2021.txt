@@ -1,0 +1,39 @@
+© Théo Jalabert ue
+Statistical finance: Exam
+2 hours-No document allowed
+11 January 2021
+
+1) What is the market portfolio? In the CAPM model, at equilibrium, what is the portfolio of the
+agents made of? Give the CAPM equation for the expected return of an asset. How can one test
+statistically for the validity of the CAPM?
+
+2) Define the Ridge estimator and provide its closed form formula (without proof). What is the in-
+terest of Ridge estimator compared to ordinary least squares? What does Lasso mean? Define the
+Lasso estimator. What is the interest of Lasso estimator compared to Ridge? How do we choose the
+regularization parameter (À) of the Ridge and Lasso estimators? Give one example of situation where
+Ridge or Lasso estimators are useful in finance.
+
+3) In the PCA of a cloud of data points in R? given by the n x p array X, how does one build the
+best sub-vector space of R? with dimension k to project the array?
+
+4) State the Marcenko-Pastur theorem (no need do give the density of the Marcenko-Pastur law, just
+call it L). How can this result be used in finance?
+
+5) In the Black-Scholes model, how does the option price evolve with the drift? Connect this with
+statistical estimation of the drift from historical data.
+
+6) You work for a brokerage company, with access to an accurate database about past transactions,
+order flows and order books. Your mission is to build an algorithm enabling you to buy in 8 hours
+600.000 Hermes stocks and 300.000 LVMH stocks. Which mathematical tools, models and statistical
+methods do you use to build it (give mathematical formulas when needed) ? How do you implement
+and calibrate the models? What do you measure on data in the construction process ? How do you
+run some testing procedures? (2 pages maximum!)
+
+7) How do you assess the quality of the tick value for a given asset ?
+
+8) From a time series of prices (high frequency data over several years), how would you show that
+volatility is rough? What are the advantages of rough models compared to classical models used for
+options? What are the microstructural foundations of rough volatility ? Summarize how this can be
+shown mathematically.
+
+1

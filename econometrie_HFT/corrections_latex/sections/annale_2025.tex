@@ -1,0 +1,119 @@
+\section{Annale 2025 (Janvier 2025) --- 3h}
+
+\begin{questionbox}{Q1 --- Markowitz sans actif sans risque (3 pts)}
+We consider the Markowitz portfolio problem in the case of no risk free asset and $N$ risky assets with expectation vector $\mu$ and covariance matrix $\Sigma$. Assuming we have a target expected return $\mu_p>0$, derive the optimal (relative) weights in term of $\Sigma$, the $N\times 2$ matrix $U=[\mu\ \1]$ and the vector $u=[\mu_p\ 1]^\trans$.
+\end{questionbox}
+
+\begin{solutionbox}{Q1}
+\textbf{Problème.} Minimiser la variance $w^\trans\Sigma w$ sous contraintes :
+\[
+w^\trans\mu=\mu_p,\qquad w^\trans\1=1.
+\]
+En forme compacte, avec $U=[\mu\ \1]\in\R^{N\times 2}$ et $u=\begin{bmatrix}\mu_p\\1\end{bmatrix}$ :
+\[
+U^\trans w = u.
+\]
+
+\medskip
+\textbf{Lagrangien et FOC.} On prend des multiplicateurs $\lambda\in\R^2$ :
+\[
+\mathcal{L}(w,\lambda)=w^\trans\Sigma w - 2\lambda^\trans(U^\trans w-u).
+\]
+FOC en $w$ : $2\Sigma w - 2U\lambda=0 \Rightarrow w=\Sigma^{-1}U\lambda$.
+Injecter dans la contrainte :
+\[
+U^\trans w = U^\trans\Sigma^{-1}U\lambda = u
+\quad\Rightarrow\quad
+\lambda = (U^\trans\Sigma^{-1}U)^{-1}u
+\]
+(matrice $2\times 2$ inversible si $\mu$ n'est pas colinéaire à $\1$ et $\Sigma\succ 0$).
+
+\medskip
+\textbf{Solution fermée (forme demandée).}
+\[
+\boxed{
+w^\star
+=
+\Sigma^{-1}U\,(U^\trans\Sigma^{-1}U)^{-1}u.
+}
+\]
+\textbf{Commentaire.} C'est la forme générale d'un problème quadratique à contraintes linéaires : projection dans la métrique $\Sigma$.
+\end{solutionbox}
+
+\begin{questionbox}{Q2 --- Variance quadratique en fonction de $\mu_p$ (2 pts)}
+Show that in the case of no risk free asset, for optimal Markowitz portfolios, the variance is a quadratic function of the expected return $\mu_p$.
+\end{questionbox}
+
+\begin{solutionbox}{Q2}
+Avec les notations classiques
+\[
+A=\1^\trans\Sigma^{-1}\1,\quad B=\1^\trans\Sigma^{-1}\mu,\quad C=\mu^\trans\Sigma^{-1}\mu,\quad \Delta=AC-B^2>0,
+\]
+la solution Markowitz (voir Annale 2022, Q1) est
+\[
+w^\star(\mu_p)=\Sigma^{-1}\Big(\frac{A\mu_p-B}{\Delta}\,\mu + \frac{C-B\mu_p}{\Delta}\,\1\Big).
+\]
+
+\medskip
+\textbf{Variance au point optimal.} Calcul direct :
+\[
+\sigma_p^2(\mu_p):=(w^\star)^\trans\Sigma w^\star.
+\]
+En utilisant l'identité standard de la frontière efficiente, on obtient
+\[
+\boxed{
+\sigma_p^2(\mu_p)
+=
+\frac{A\mu_p^2 -2B\mu_p + C}{\Delta}.
+}
+\]
+C'est bien une \textbf{fonction quadratique} de $\mu_p$ (parabole).
+
+\medskip
+\textbf{Intuition.} Sans actif sans risque, l'ensemble efficient est une \emph{hyperbole} dans le plan (écart-type, espérance) et devient une parabole en (variance, espérance).
+\end{solutionbox}
+
+\begin{questionbox}{Q3 --- OLS / Ridge / Lasso (1.5 pts)}
+Ordinary least squares, ridge estimator, Lasso estimator: definitions, closed form solutions when possible, pros and cons.
+\end{questionbox}
+
+\begin{solutionbox}{Q3}
+Synthèse : voir Annale 2021, Q2 (avec la formule fermée Ridge et la définition Lasso). \textbf{À mettre dans la copie :}
+\begin{itemize}[leftmargin=*]
+  \item OLS : minimise $\|y-X\beta\|_2^2$, solution $(X^\trans X)^{-1}X^\trans y$ si inversible.
+  \item Ridge : minimise $\|y-X\beta\|_2^2+\lambda\|\beta\|_2^2$, solution $(X^\trans X+\lambda I)^{-1}X^\trans y$.
+  \item Lasso : minimise $\frac12\|y-X\beta\|_2^2+\lambda\|\beta\|_1$, pas de formule fermée générale; solveurs coordonnée / LARS.
+  \item Pros/cons : biais-variance, stabilité vs sparsité.
+\end{itemize}
+\end{solutionbox}
+
+\begin{questionbox}{Q4 --- Tick optimal (1.5 pts)}
+How can we set an optimal tick value for an asset? (5--10 lines).
+\end{questionbox}
+
+\begin{solutionbox}{Q4}
+\textbf{Principe.} Choisir le tick pour maximiser une fonction objectif ``qualité de marché'' : liquidité (spread, profondeur), efficience (bruit microstructure), résilience, coûts de quote.
+\begin{itemize}[leftmargin=*]
+  \item Simuler/estimer l'effet d'un changement de tick sur : spread (en ticks et en \%), profondeur au best, taux d'annulation/quote, coûts effectifs (effective spread), adverse selection.
+  \item Chercher un régime où le spread est \textbf{souvent} 1--2 ticks, avec profondeur suffisante et faible bruit.
+  \item Comparer à des actifs comparables (prix/liquidité) et faire une analyse \textbf{avant/après} si changement historique.
+\end{itemize}
+Conclusion : tick trop grand $\Rightarrow$ friction; tick trop petit $\Rightarrow$ carnet instable. On choisit l'équilibre empirique sur données.
+\end{solutionbox}
+
+\begin{questionbox}{Q5 --- Rough volatility (2 pts)}
+How would you demonstrate that rough volatility models are superior to conventional stochastic volatility models? (1 page maximum; connections with arbitrage and market impact is a good idea).
+\end{questionbox}
+
+\begin{solutionbox}{Q5}
+Voir Annale 2024, Q4 et Q5. Pour \textbf{connecter à l'arbitrage} : rappeler qu'on veut un modèle sans arbitrage qui reproduit surfaces d'options; rough donne une dynamique de smile plus réaliste (skew court terme) sans violations apparentes. Pour \textbf{market impact} : l'ordre flow Hawkes + impact transient produit une volatilité effective rough, donnant une fondation ``micro'' au modèle.
+\end{solutionbox}
+
+\begin{questionbox}{Q6 --- Commentaire d'article (10 pts)}
+Summarize and comment the enclosed article in light of the course: results, strengths/weaknesses, limitations, improvements.
+\end{questionbox}
+
+\begin{solutionbox}{Q6}
+Utiliser le plan de l'Annale 2023, Q5 (résumé + critique + extensions). Vu le poids (10 pts), soigner la forme : titres, équations clés (2--3 max), tableau ``forces/faiblesses'', et une section ``expériences supplémentaires''.
+\end{solutionbox}
+

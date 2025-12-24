@@ -1,0 +1,77 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french,english]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{margin=2.4cm}
+
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black
+}
+\usepackage[most]{tcolorbox}
+\tcbset{
+  enhanced,
+  sharp corners,
+  boxrule=0.4pt,
+  colback=blue!2,
+  colframe=blue!35!black,
+  left=1.2ex,right=1.2ex,top=0.8ex,bottom=0.8ex
+}
+
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\mathbb{V}\mathrm{ar}}
+\newcommand{\Cov}{\mathbb{C}\mathrm{ov}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\1}{\mathbf{1}}
+\newcommand{\trans}{\mathsf{T}}
+\newcommand{\argmin}{\mathop{\mathrm{arg\,min}}}
+\newcommand{\argmax}{\mathop{\mathrm{arg\,max}}}
+
+\newtcolorbox{questionbox}[1]{title={Énoncé --- #1}}
+\newtcolorbox{solutionbox}[1]{colback=green!2,colframe=green!35!black,title={Corrigé détaillé --- #1}}
+\newtcolorbox{recapbox}[1]{colback=yellow!7,colframe=yellow!45!black,title={À connaître par cœur --- #1}}
+
+\title{Annales (2021--2025) --- Finance statistique / Économétrie HFT\\
+\large Corrigés détaillés + fiche récap}
+\author{}
+\date{\today}
+
+\begin{document}
+\selectlanguage{french}
+\maketitle
+\tableofcontents
+\bigskip
+
+\begin{tcolorbox}[title={Comment utiliser ce document (2 minutes)}]
+Ce poly regroupe \textbf{les énoncés} et des \textbf{corrigés expliqués} des sujets 2021--2025 (format ``finance statistique''). La dernière partie est une \textbf{fiche récap} des formules et raisonnements à maîtriser.
+
+\medskip
+\textbf{Conseil d'entraînement.} Pour chaque question: (i) écris d'abord le plan en 30--60 secondes, (ii) pose les hypothèses/notations, (iii) déroule en formules, (iv) termine par l'intuition et \emph{comment on le testerait sur données}.
+\end{tcolorbox}
+
+\clearpage
+\input{sections/annale_2021}
+\clearpage
+\input{sections/annale_2022}
+\clearpage
+\input{sections/annale_2023}
+\clearpage
+\input{sections/annale_2024}
+\clearpage
+\input{sections/annale_2025}
+\clearpage
+\input{sections/fiche_recap}
+
+\end{document}
+

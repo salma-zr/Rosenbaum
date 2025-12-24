@@ -1,0 +1,184 @@
+\section{Annale 2024 (Janvier 2024) --- 3h}
+
+\begin{questionbox}{Q1 --- CAPM (espérance et variance)}
+Give the CAPM equations for expectation and variance of returns, providing accurate definitions of all quantities. What does the CAPM tell us about the relationship between risk and returns in finance? How can you prove the validity of CAPM in practice? (give main mathematical elements without entering in details)
+\end{questionbox}
+
+\begin{solutionbox}{Q1}
+\textbf{Notations.} $R_i$ rendement de l'actif $i$, $R_M$ rendement du portefeuille de marché, $r_f$ taux sans risque sur la période, $\beta_i=\Cov(R_i,R_M)/\Var(R_M)$.
+
+\medskip
+\textbf{Équation d'espérance (Security Market Line).}
+\[
+\E[R_i] = r_f + \beta_i\big(\E[R_M]-r_f\big).
+\]
+\textbf{Interprétation :} prime de risque proportionnelle au \textbf{risque systématique} $\beta_i$.
+
+\medskip
+\textbf{Décomposition de variance (sous modèle de marché).} Si
+\[
+R_i-r_f = \alpha_i + \beta_i(R_M-r_f)+\varepsilon_i,\qquad \E[\varepsilon_i]=0,\ \Cov(\varepsilon_i,R_M)=0,
+\]
+alors
+\[
+\Var(R_i) = \beta_i^2\Var(R_M)+\Var(\varepsilon_i).
+\]
+La partie $\beta_i^2\Var(R_M)$ est le risque \textbf{non diversifiable}; $\Var(\varepsilon_i)$ est diversifiable.
+
+\medskip
+\textbf{Lien risque--rendement (message CAPM).}
+\begin{itemize}[leftmargin=*]
+  \item Les investisseurs sont rémunérés uniquement pour le risque non diversifiable.
+  \item Deux actifs avec même $\beta$ doivent offrir la même espérance (sinon arbitrage via portefeuille factoriel).
+\end{itemize}
+
+\medskip
+\textbf{Validation empirique (éléments mathématiques).}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Régressions time-series} : estimer $\beta_i$ et tester $\alpha_i=0$ (GRS).
+  \item \textbf{Fama--MacBeth} : tester la relation linéaire $\E[R_i-r_f]=\lambda \beta_i$ en coupe transversale.
+  \item \textbf{Problème d'identification} : le vrai marché est inobservable (proxy), $\beta$ bruitée, instabilité de paramètres.
+\end{itemize}
+\end{solutionbox}
+
+\begin{questionbox}{Q2 --- PCA sur courbes de taux}
+You have monthly interest rate curves (2000--2023), 10 maturities (1y--10y). Describe how you would analyze PCA results and what you expect to see.
+\end{questionbox}
+
+\begin{solutionbox}{Q2}
+\textbf{Données.} Matrice $X$ (dates $\times$ maturités). On travaille souvent sur :
+\begin{itemize}[leftmargin=*]
+  \item niveaux $y_t(\tau)$ (yields), ou
+  \item variations $\Delta y_t(\tau)$ (plus stationnaire),
+\end{itemize}
+après centrage (et parfois standardisation).
+
+\medskip
+\textbf{PCA.} Calculer covariance (ou corrélation) empirique sur les 10 maturités, puis décomposer en valeurs/vecteurs propres. Analyser :
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Variance expliquée} par les 1--3 premières composantes (scree plot).
+  \item \textbf{Loadings} (vecteurs propres) selon la maturité.
+  \item \textbf{Scores} (facteurs) dans le temps et leur interprétation économique.
+\end{itemize}
+
+\medskip
+\textbf{Ce qu'on attend typiquement (résultat classique).}
+\begin{itemize}[leftmargin=*]
+  \item PC1 : \textbf{Level} (toutes maturités bougent dans le même sens) $\Rightarrow$ loadings \(\approx\) constants positifs.
+  \item PC2 : \textbf{Slope} (court vs long) $\Rightarrow$ loadings négatifs sur court, positifs sur long (ou inverse).
+  \item PC3 : \textbf{Curvature} (milieu vs extrêmes) $\Rightarrow$ loadings en ``bosse''.
+\end{itemize}
+Les 3 premières PC expliquent souvent \(\gtrsim 95\%\) de la variance des variations de taux.
+
+\medskip
+\textbf{Diagnostics à mentionner.}
+\begin{itemize}[leftmargin=*]
+  \item stabilité des loadings (rolling PCA),
+  \item impact de l'usage niveaux vs variations,
+  \item robustesse à la standardisation,
+  \item interprétation macro (politique monétaire, term premium).
+\end{itemize}
+\end{solutionbox}
+
+\begin{questionbox}{Q3 --- Corrélation de deux Itô}
+Two Itô processes $X,Y$ driven by correlated Brownian motions with constant correlation $\rho$ and stochastic volatilities. Observed on $[0,1]$ at $i/n$. Give an estimator of $\rho$ and sketch a proof of consistency as $n\to\infty$.
+\end{questionbox}
+
+\begin{solutionbox}{Q3}
+\textbf{Modèle (forme standard).}
+\[
+dX_t=\mu^X_t\,dt+\sigma^X_t\,dW_t,\qquad
+dY_t=\mu^Y_t\,dt+\sigma^Y_t\,dB_t,\qquad
+d\langle W,B\rangle_t=\rho\,dt.
+\]
+
+\medskip
+\textbf{Estimateur naturel : corrélation réalisée.} Incréments $\Delta_i^n X=X_{i/n}-X_{(i-1)/n}$, idem $Y$.
+\[
+\widehat{[X,Y]}_n := \sum_{i=1}^n \Delta_i^n X\,\Delta_i^n Y,\qquad
+\widehat{[X]}_n := \sum_{i=1}^n (\Delta_i^n X)^2,\qquad
+\widehat{[Y]}_n := \sum_{i=1}^n (\Delta_i^n Y)^2.
+\]
+Puis
+\[
+\hat\rho_n := \frac{\widehat{[X,Y]}_n}{\sqrt{\widehat{[X]}_n\,\widehat{[Y]}_n}}.
+\]
+
+\medskip
+\textbf{Pourquoi c'est consistant (esquisse).}
+\begin{itemize}[leftmargin=*]
+  \item Pour des semimartingales continues, \textbf{variation quadratique} :
+  \[
+  \widehat{[X]}_n \xrightarrow[n\to\infty]{\mathbb{P}} [X]_1=\int_0^1 (\sigma^X_t)^2\,dt,\qquad
+  \widehat{[Y]}_n \to [Y]_1=\int_0^1 (\sigma^Y_t)^2\,dt.
+  \]
+  \item \textbf{Covariation quadratique} :
+  \[
+  \widehat{[X,Y]}_n \xrightarrow{\mathbb{P}} [X,Y]_1=\int_0^1 \sigma^X_t\sigma^Y_t\,d\langle W,B\rangle_t
+  =\rho\int_0^1 \sigma^X_t\sigma^Y_t\,dt.
+  \]
+  \item Donc, si les intégrales au dénominateur sont $>0$, alors
+  \[
+  \hat\rho_n \xrightarrow{\mathbb{P}} \rho\cdot
+  \frac{\int_0^1 \sigma^X_t\sigma^Y_t\,dt}{\sqrt{\int_0^1(\sigma^X_t)^2dt\ \int_0^1(\sigma^Y_t)^2dt}}.
+  \]
+  \textbf{Remarque importante :} cet estimateur converge vers la \emph{corrélation intégrée} si les volatilitès sont stochastiques. Pour récupérer la \textbf{corrélation instantanée constante} $\rho$, il faut supposer (ou utiliser une méthode) garantissant que le facteur d'échelle vaut 1 (par ex.\ $\sigma^X_t=\sigma^Y_t$ ou normalisation/estimations locales).
+\end{itemize}
+
+\medskip
+\textbf{Version ``qui identifie $\rho$'' sous hypothèse standard cours.} Souvent, on suppose un modèle à deux Brownien corrélés :
+\[
+dX_t=\sigma^X_t\,dW_t,\qquad dY_t=\sigma^Y_t(\rho\,dW_t+\sqrt{1-\rho^2}\,dW_t^\perp),
+\]
+alors $[X,Y]_1=\rho\int_0^1\sigma^X_t\sigma^Y_t\,dt$ et l'argument précédent donne la consistance de l'estimateur vers $\rho$ si la normalisation est discutée dans le cours (corrélation ``au niveau Brownien'').
+\end{solutionbox}
+
+\begin{questionbox}{Q4 --- Rough volatility}
+How would you demonstrate that rough volatility models are superior to conventional stochastic volatility models? (1 page maximum, several answers are possible)
+\end{questionbox}
+
+\begin{solutionbox}{Q4}
+\textbf{Axes de démonstration (choisir 2--3 et les développer).}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Stylized facts} : le variogramme de $\log RV$ suit une loi de puissance $h^{2H}$ avec $H<1/2$ (incompatible avec diffusions Markoviennes lisses type Heston).
+  \item \textbf{Options} : meilleure reproduction du smile court terme et de la dynamique de surface (skew explosion).
+  \item \textbf{Backtests} : comparer out-of-sample (erreur de pricing, hedging error) rough vs Heston/SABR.
+  \item \textbf{Microstructure} : dérivation limite via Hawkes quasi-critique + impact.
+\end{itemize}
+\end{solutionbox}
+
+\begin{questionbox}{Q5 --- Hawkes, impact, rough}
+Using Hawkes processes, explain the connection between market microstructure, market impact and rough volatility (1 page maximum).
+\end{questionbox}
+
+\begin{solutionbox}{Q5}
+\textbf{1) Microstructure : ordre flow auto-excité.} Un Hawkes (univarié) :
+\[
+\lambda_t = \mu + \int_0^t \phi(t-s)\,dN_s,
+\]
+où $N_t$ compte les arrivées d'ordres et $\phi\ge 0$ mesure l'auto-excitation.
+Le \textbf{branching ratio} $m=\int_0^\infty \phi(u)\,du$ proche de 1 $\Rightarrow$ régimes ``quasi-critiques'' : longues dépendances de l'activité.
+
+\medskip
+\textbf{2) Impact : prix comme réponse à l'ordre flow.} Un modèle stylisé :
+\[
+P_t = P_0 + \int_0^t G(t-s)\,dQ_s,
+\]
+où $Q$ est le flux net d'ordres signés et $G$ est un noyau d'impact (transient impact).
+Si $Q$ est lié à un Hawkes quasi-critique, alors l'activité et donc la volatilité du prix héritent d'une mémoire longue.
+
+\medskip
+\textbf{3) Limites d'échelle $\Rightarrow$ rough.} Dans un régime quasi-critique (renormalisation), l'intensité (ou son cumul) converge vers un processus de type \textbf{Volterra} / fractionnel, ce qui implique que la volatilité (mesurée par la variation quadratique du prix) devient \textbf{rough} (Hurst $H<1/2$).
+
+\medskip
+\textbf{Message.} Les mécanismes microstructurels (clustering d'ordres + impact) produisent naturellement une volatilité ``rugueuse'' à l'échelle macro, justifiant rough volatility.
+\end{solutionbox}
+
+\begin{questionbox}{Q6 --- Commentaire d'article}
+Summarize and comment the enclosed article in light of the course: results, strengths/weaknesses, limitations, improvements.
+\end{questionbox}
+
+\begin{solutionbox}{Q6}
+Utiliser le plan ``commentaire d'article'' de l'Annale 2023, Q5. Pour maximiser la note : ajouter (i) un schéma des variables/modèle, (ii) une discussion \textbf{coûts/impact} si l'article propose une stratégie, et (iii) une section ``robustesse'' (autres actifs/périodes).
+\end{solutionbox}
+

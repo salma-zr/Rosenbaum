@@ -1,0 +1,37 @@
+=
+© Théo Jalabert “ue
+Examen cours de finance statistique
+Janvier 2025
+No document allowed, 3 hours
+Recommended timing: Questions 1-2: 30 min, Questions 3-4-5: 30 min,
+Article reading: 1 hour, Writing: 1 hour.
+
++ (3 pts) We consider the Markowitz portfolio problem in the case of
+no risk free asset and N risky assets with expectation vector y; and
+covariance matrix (1. Assuming we have a target expected return for
+the portfolio given by some positive constant pp, derive the optimal
+(relative) weights for each risky asset in the Markowitz problem in
+term of 2, the N x 2 matrix U = [y 1] and the vector u = [Hp 1)’.
+
+e (2 pts) Show that in the case of no risk free asset, for optimal Markowitz
+portfolios, the variance is a quadratic function of the expected return
+Lp.
+
+e (1.5 pts) Ordinary least squares, ridge estimator, Lasso estimator: def-
+initions, closed form solutions when possible, pros and cons.
+
+e (1.5 pts) How can we set an optimal tick value for an asset ? (5-10
+lines).
+
+e (2 pts) How would you demonstrate that rough volatility models are
+superior to conventional stochastic volatility models? (1 page maxi-
+mum, several answers are possible. Making connections with arbitrage
+and market impact is a good idea).
+
+e (10 pts) Summarize (quickly) and comment the enclosed article in
+light of what has been seen in class. Discuss the obtained results, the
+strengths and weaknesses of the approach, the relevant points and the
+limitations. Suggest way to improve this work or interesting directions
+to extend it.
+
+1

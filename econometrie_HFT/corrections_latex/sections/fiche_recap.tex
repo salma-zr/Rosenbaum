@@ -1,0 +1,89 @@
+\section{Fiche récap --- à apprendre / savoir refaire vite}
+
+\begin{recapbox}{Markowitz (sans actif sans risque)}
+\textbf{Données :} $\mu\in\R^N$, $\Sigma\in\R^{N\times N}$, contraintes $w^\trans\1=1$ et $w^\trans\mu=\mu_p$.
+
+\medskip
+\textbf{Solution en forme compacte.} Avec $U=[\mu\ \1]$, $u=[\mu_p\ 1]^\trans$ :
+\[
+w^\star=\Sigma^{-1}U\,(U^\trans\Sigma^{-1}U)^{-1}u.
+\]
+
+\medskip
+\textbf{Quantités scalaires.} $A=\1^\trans\Sigma^{-1}\1,\ B=\1^\trans\Sigma^{-1}\mu,\ C=\mu^\trans\Sigma^{-1}\mu,\ \Delta=AC-B^2$.
+\[
+\sigma_p^2(\mu_p)=\frac{A\mu_p^2-2B\mu_p+C}{\Delta}.
+\]
+\end{recapbox}
+
+\begin{recapbox}{Markowitz (avec actif sans risque)}
+\textbf{Portefeuille tangent :} maximise le Sharpe :
+\[
+w_T \propto \Sigma^{-1}(\mu-r_f\1),\qquad
+w_T = \frac{\Sigma^{-1}(\mu-r_f\1)}{\1^\trans\Sigma^{-1}(\mu-r_f\1)}\ \text{(si budget)}.
+\]
+\textbf{Capital Market Line :} tout portefeuille efficient $= a\,w_T+(1-a)w_f$.
+\end{recapbox}
+
+\begin{recapbox}{CAPM (à écrire sans hésiter)}
+\[
+\E[R_i]-r_f=\beta_i\big(\E[R_M]-r_f\big),\qquad
+\beta_i=\frac{\Cov(R_i,R_M)}{\Var(R_M)}.
+\]
+\textbf{Test :} régression $R_{i,t}-r_{f,t}=\alpha_i+\beta_i(R_{M,t}-r_{f,t})+\varepsilon_{i,t}$, CAPM $\Rightarrow \alpha_i=0$ (GRS).
+\end{recapbox}
+
+\begin{recapbox}{OLS / Ridge / Lasso}
+\textbf{OLS :} $\hat\beta=(X^\trans X)^{-1}X^\trans y$ (si inversible).
+\[
+\textbf{Ridge : }\ \hat\beta^{R}(\lambda)=\argmin_\beta \|y-X\beta\|_2^2+\lambda\|\beta\|_2^2
+,\quad
+\hat\beta^{R}=(X^\trans X+\lambda I)^{-1}X^\trans y.
+\]
+\[
+\textbf{Lasso : }\ \hat\beta^{L}(\lambda)=\argmin_\beta \tfrac12\|y-X\beta\|_2^2+\lambda\|\beta\|_1
+\quad(\text{sparsité}).
+\]
+\textbf{Choix $\lambda$ :} CV/walk-forward, AIC/BIC, règles théoriques.
+\end{recapbox}
+
+\begin{recapbox}{PCA (à savoir expliquer en 5 lignes)}
+Centres $X_c$. Covariance $\hat\Sigma=\frac1n X_c^\trans X_c$.
+Les $k$ premières composantes = $k$ plus grandes valeurs propres $\hat\lambda_1\ge\cdots$ et vecteurs propres $v_1,\dots,v_k$.
+Sous-espace optimal : $\mathrm{span}(v_1,\dots,v_k)$.
+Variance expliquée : $\sum_{j=1}^k \hat\lambda_j / \sum_{j=1}^p \hat\lambda_j$.
+\end{recapbox}
+
+\begin{recapbox}{Mar\v{c}enko--Pastur (message)}
+Si $p/n\to c$, le spectre de $S=\frac1n X^\trans X$ ne ``colle'' pas à la vraie covariance : bulk sur $[(1-\sqrt c)^2,(1+\sqrt c)^2]$.
+\textbf{Usage :} détecter facteurs (valeurs propres hors bulk) et nettoyer/shrinker la covariance pour Markowitz.
+\end{recapbox}
+
+\begin{recapbox}{Black--Scholes : le drift ne price pas}
+Sous $\mathbb{P}$ : $dS_t=\mu S_tdt+\sigma S_tdW_t$. Sous $\mathbb{Q}$ : $dS_t=rS_tdt+\sigma S_tdW_t^{\mathbb{Q}}$.
+\[
+V_0=e^{-rT}\E^{\mathbb{Q}}[\Phi(S_T)]\quad\Rightarrow\quad V_0\ \text{indépend de }\mu.
+\]
+\end{recapbox}
+
+\begin{recapbox}{Itô, variation quadratique, corrélation}
+Pour $X$ continu :
+\[
+\sum_{i=1}^n (X_{i/n}-X_{(i-1)/n})^2 \xrightarrow{\mathbb{P}} [X]_1=\int_0^1 \sigma_t^2\,dt.
+\]
+Covariation :
+\[
+\sum_{i=1}^n \Delta_i X\,\Delta_i Y \xrightarrow{\mathbb{P}} [X,Y]_1=\int_0^1 \sigma_t^X\sigma_t^Y\,d\langle W,B\rangle_t.
+\]
+\end{recapbox}
+
+\begin{recapbox}{Hawkes / rough volatility (phrases qui rapportent)}
+\textbf{Hawkes :} $\lambda_t=\mu+\int_0^t \phi(t-s)\,dN_s$, clustering; $m=\int_0^\infty\phi \approx 1$ $\Rightarrow$ quasi-criticité.
+Avec impact transient, l'ordre flow agrégé $\Rightarrow$ volatilité effective \textbf{rough} (Hurst $H<1/2$) dans des limites d'échelle.
+\end{recapbox}
+
+\begin{recapbox}{Tick value}
+Tick trop grand : spread collant, coûts élevés; tick trop petit : carnet instable, flickering.
+À analyser : spread en ticks, profondeur best, effective spread, adverse selection, résilience, autocorrélation des returns.
+\end{recapbox}
+
