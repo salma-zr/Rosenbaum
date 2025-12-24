@@ -1,0 +1,38 @@
+                                                                   © Théo Jalabert
+
+
+
+
+         Examen cours de finance statistique
+                               Janvier 2024
+
+                       No document allowed, 3 heures
+    " (2 pts) Give the CAPM equations for expectation and variance of re
+      turns, providing accurate definitions of all quantities. What does the
+      CAPM tell us about the relationship between risk and returns in fi
+      nance? How can you prove the validity of CAPM in practice? (give
+      main mathematical elements without entering in details)
+    " (2 pts) Consider you have access to interest rates curve between 2000
+      and 2023, one curve every month, with 10 maturity points for each
+      curve, from 1 year to 10 years. Describe how you would analyze the
+      results ofa PCA applied to this dataframe and what you expect to see.
+"    " (2 pts) Consider two one-dimensional Ito processes X and Y driven by
+       two correlated Brownian motions W and B with constant correlation
+      p and (stochastic) volatilities o and o. We observe X and Y over
+      [0, 1] at times i/n, i= 0,,n with n > 0. Give an estimator of the
+      parameter p and provide a sketch of proof of its consistency as n goes
+      to infinity.
+    " (2pts) How would you demonstrate that rough volatility models are su
+      perior to conventional stochastic volatility models? (1 page maximum,
+      several answers are possible)
+      (2 pts) Using Hawkes processes, explain the connection between market
+      microstructure, market impact and rough volatility (1 page maximum).
+     " (10 pts) Surmmarize (quickly) and comment the enclosed article in
+       light of what has been seen in class. Discuss the obtained results, the
+       strengths and weaknesses of the approach, the relevant points and the
+       limitaitöns. Suggest way to improve this work or interesting directions
+       to extend it.
+
+
+                                       1
+
