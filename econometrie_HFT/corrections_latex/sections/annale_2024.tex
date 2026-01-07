@@ -138,13 +138,33 @@ How would you demonstrate that rough volatility models are superior to conventio
 \end{questionbox}
 
 \begin{solutionbox}{Q4}
-\textbf{Axes de démonstration (choisir 2--3 et les développer).}
+\selectlanguage{english}
+A convincing answer combines \textbf{empirical evidence} (roughness in time series), \textbf{option evidence} (better fit/dynamics), and \textbf{economic consistency} (no-arbitrage and microstructure foundations).
+
+\medskip
+\textbf{1) Empirical evidence from high-frequency data (roughness).} Build a volatility proxy (realized variance/volatility) and test the scaling of log-volatility increments. Let \(X_t=\log RV_{t,\Delta}\). Estimate the variogram
+\[
+\widehat{\mathcal V}(h)=\frac{1}{T_h}\sum_t (X_{t+h}-X_t)^2.
+\]
+Rough volatility predicts \(\mathcal V(h)\approx C h^{2H}\) with \(H\in(0,1/2)\). A log--log regression of \(\widehat{\mathcal V}(h)\) on \(h\) typically yields \(H\approx 0.05\)--\(0.2\), consistently across many assets. This is difficult to reconcile with classical smooth Markov diffusions for volatility, whose small-lag behaviour corresponds to \(H\approx 1/2\) (too smooth).
+
+\medskip
+\textbf{2) Option evidence (fit and dynamics).} Compare rough models (e.g.\ rBergomi/rough Heston) against standard models (Heston/SABR) on:
 \begin{itemize}[leftmargin=*]
-  \item \textbf{Stylized facts} : le variogramme de $\log RV$ suit une loi de puissance $h^{2H}$ avec $H<1/2$ (incompatible avec diffusions Markoviennes lisses type Heston).
-  \item \textbf{Options} : meilleure reproduction du smile court terme et de la dynamique de surface (skew explosion).
-  \item \textbf{Backtests} : comparer out-of-sample (erreur de pricing, hedging error) rough vs Heston/SABR.
-  \item \textbf{Microstructure} : dérivation limite via Hawkes quasi-critique + impact.
+  \item \textbf{Cross-sectional fit.} Pricing errors across strikes and maturities, with the same number of effective parameters.
+  \item \textbf{Short-maturity behaviour.} Rough models reproduce the observed steep short-end skew term structure better than classical SV (often labelled ``skew explosion'' phenomena).
+  \item \textbf{Dynamic performance.} Out-of-sample re-calibration stability and hedging error (delta/vega hedging) on a rolling window.
 \end{itemize}
+
+\medskip
+\textbf{3) Link to arbitrage (model admissibility).} A fair comparison requires both models to be \textbf{no-arbitrage} and calibrated consistently under the risk-neutral measure. Rough models can be built as Volterra volatility models that preserve positivity and admit well-posed pricing/hedging. The claim is not ``roughness creates arbitrage''; rather, roughness is a statistically necessary feature that can be embedded in an arbitrage-free pricing framework.
+
+\medskip
+\textbf{4) Microstructure/impact foundations (high-value connection to the course).} Order flow exhibits clustering (Hawkes/self-excitation) and prices respond to flow through transient impact. In near-critical regimes, scaling limits of Hawkes-driven activity combined with impact kernels lead to Volterra/fractional-type volatility, providing a microstructural route to \(H<1/2\). This gives rough volatility an economic foundation instead of a purely phenomenological fit.
+
+\medskip
+\textbf{Conclusion.} Rough volatility is ``superior'' if it (i) matches the empirical scaling of volatility, (ii) improves option surface fit/dynamics and hedging out-of-sample, and (iii) remains consistent with no-arbitrage and with a plausible microstructure mechanism.
+\selectlanguage{french}
 \end{solutionbox}
 
 \begin{questionbox}{Q5 --- Hawkes, impact, rough}
@@ -152,26 +172,33 @@ Using Hawkes processes, explain the connection between market microstructure, ma
 \end{questionbox}
 
 \begin{solutionbox}{Q5}
-\textbf{1) Microstructure : ordre flow auto-excité.} Un Hawkes (univarié) :
+\selectlanguage{english}
+\textbf{Microstructure $\rightarrow$ impact $\rightarrow$ rough volatility} can be explained in three steps.
+
+\medskip
+\textbf{1) Microstructure: order flow is self-exciting.} A Hawkes process models the clustering of market activity:
 \[
-\lambda_t = \mu + \int_0^t \phi(t-s)\,dN_s,
+\lambda_t=\mu+\int_0^t \phi(t-s)\,dN_s,\qquad \phi\ge 0,
 \]
-où $N_t$ compte les arrivées d'ordres et $\phi\ge 0$ mesure l'auto-excitation.
-Le \textbf{branching ratio} $m=\int_0^\infty \phi(u)\,du$ proche de 1 $\Rightarrow$ régimes ``quasi-critiques'' : longues dépendances de l'activité.
-
-\medskip
-\textbf{2) Impact : prix comme réponse à l'ordre flow.} Un modèle stylisé :
+where \(N_t\) counts events (trades, market orders, cancellations) and \(\phi\) measures self-excitation. The branching ratio
 \[
-P_t = P_0 + \int_0^t G(t-s)\,dQ_s,
+m=\int_0^\infty \phi(u)\,du
 \]
-où $Q$ est le flux net d'ordres signés et $G$ est un noyau d'impact (transient impact).
-Si $Q$ est lié à un Hawkes quasi-critique, alors l'activité et donc la volatilité du prix héritent d'une mémoire longue.
+quantifies endogeneity: when \(m\) is close to \(1\) (near-criticality), bursts of activity trigger further activity, producing persistence across many time scales (long memory-like behaviour in intensities).
 
 \medskip
-\textbf{3) Limites d'échelle $\Rightarrow$ rough.} Dans un régime quasi-critique (renormalisation), l'intensité (ou son cumul) converge vers un processus de type \textbf{Volterra} / fractionnel, ce qui implique que la volatilité (mesurée par la variation quadratique du prix) devient \textbf{rough} (Hurst $H<1/2$).
+\textbf{2) Market impact: prices respond to signed order flow with memory.} A stylized transient-impact model writes
+\[
+P_t=P_0+\int_0^t G(t-s)\,dQ_s,
+\]
+where \(Q\) is signed volume (buy minus sell pressure) and \(G\) is a decaying impact kernel (transient impact). If order flow is clustered (Hawkes), then both \(Q\) and the induced price variation inherit multi-scale dependence. In particular, the quadratic variation of \(P\) (hence realized volatility) becomes driven by a stochastic activity rate.
 
 \medskip
-\textbf{Message.} Les mécanismes microstructurels (clustering d'ordres + impact) produisent naturellement une volatilité ``rugueuse'' à l'échelle macro, justifiant rough volatility.
+\textbf{3) Scaling limits: near-critical Hawkes $\Rightarrow$ Volterra/fractional limits.} In near-critical regimes, appropriate time rescaling and renormalization lead Hawkes intensities (or integrated intensities) to converge to \textbf{Volterra-type} processes (fractional/rough limits). Because volatility is essentially the rate of quadratic variation, these Volterra limits translate into \textbf{rough} volatility dynamics with Hurst parameter \(H<1/2\).
+
+\medskip
+\textbf{Takeaway.} Rough volatility is not only a good reduced-form fit: it can emerge from microstructure primitives (self-exciting order flow) combined with realistic impact (transient kernels). This links high-frequency market mechanics to low-frequency volatility roughness.
+\selectlanguage{french}
 \end{solutionbox}
 
 \begin{questionbox}{Q6 --- Commentaire d'article}
@@ -179,6 +206,26 @@ Summarize and comment the enclosed article in light of the course: results, stre
 \end{questionbox}
 
 \begin{solutionbox}{Q6}
-Utiliser le plan ``commentaire d'article'' de l'Annale 2023, Q5. Pour maximiser la note : ajouter (i) un schéma des variables/modèle, (ii) une discussion \textbf{coûts/impact} si l'article propose une stratégie, et (iii) une section ``robustesse'' (autres actifs/périodes).
+\selectlanguage{english}
+This question is graded on structure and critical thinking. A high-scoring answer reads like a short referee report: clear summary, explicit links to course concepts, then targeted criticism and improvements.
+
+\medskip
+\textbf{Summary.} The paper addresses a specific market question (prediction, volatility modelling, microstructure, execution, etc.) using a dataset with a given frequency and horizon. It proposes a model/estimation procedure and reports quantitative results (fit, predictability, economic value, or structural estimates).
+
+\medskip
+\textbf{Connection to the course.} Place the contribution in one (or more) course frameworks: CAPM/factor models for risk premia; regularization (Ridge/Lasso) for high-dimensional prediction; realized measures and rough volatility for volatility modelling; Hawkes/queue-reactive dynamics for order flow; Almgren--Chriss or transient impact for execution and market impact.
+
+\medskip
+\textbf{Strengths.} The strongest papers (i) use a well-identified empirical design, (ii) validate out-of-sample with honest baselines, (iii) report uncertainty (confidence intervals) and stability, and (iv) align metrics with the goal (pricing error for options, IS/market impact for execution, log-likelihood for point processes, etc.).
+
+\medskip
+\textbf{Weaknesses and limitations.} Typical issues are endogeneity (especially in impact/execution), microstructure noise and sampling bias at high frequency, non-stationarity and regime shifts, data snooping (multiple testing), and ignoring transaction costs/impact when claiming economic gains.
+
+\medskip
+\textbf{Improvements.} Propose 2--4 concrete extensions: add transaction-cost/impact-aware evaluation; use walk-forward validation; compare against stronger baselines; add regime dependence (volatility/liquidity buckets); run time-rescaling tests for point processes; or test predictive gains statistically (Diebold--Mariano). If the paper proposes a strategy, insist on implementability (latency, market impact, capacity).
+
+\medskip
+\textbf{Conclusion.} The paper is convincing if its gains remain robust after costs/impact and if its identification assumptions remain credible under microstructure effects and non-stationarity.
+\selectlanguage{french}
 \end{solutionbox}
 
