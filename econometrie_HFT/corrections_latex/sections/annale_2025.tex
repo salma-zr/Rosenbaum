@@ -106,7 +106,33 @@ How would you demonstrate that rough volatility models are superior to conventio
 \end{questionbox}
 
 \begin{solutionbox}{Q5}
-Voir Annale 2024, Q4 et Q5. Pour \textbf{connecter à l'arbitrage} : rappeler qu'on veut un modèle sans arbitrage qui reproduit surfaces d'options; rough donne une dynamique de smile plus réaliste (skew court terme) sans violations apparentes. Pour \textbf{market impact} : l'ordre flow Hawkes + impact transient produit une volatilité effective rough, donnant une fondation ``micro'' au modèle.
+\selectlanguage{english}
+To argue that rough volatility models are superior to conventional stochastic volatility (SV) models, you should combine \textbf{time-series evidence}, \textbf{option-surface evidence}, and \textbf{economic consistency} (no-arbitrage) while linking roughness to microstructure/impact.
+
+\medskip
+\textbf{1) Time-series evidence (roughness of volatility).} From high-frequency prices, build realized variance \(RV_{t,\Delta}\) over a fixed window \(\Delta\) and study \(X_t=\log RV_{t,\Delta}\). Estimate the variogram
+\[
+\widehat{\mathcal V}(h)=\frac{1}{T_h}\sum_t (X_{t+h}-X_t)^2.
+\]
+Empirically, \(\widehat{\mathcal V}(h)\) follows a power law \(\widehat{\mathcal V}(h)\approx C h^{2H}\) with \(H<1/2\) over a wide range of lags (minutes to days), typically \(H\approx 0.05\)--\(0.2\). This ``too-irregular'' behaviour is hard to reproduce with classical Markov diffusions for volatility (which are effectively closer to \(H\approx 1/2\) at small scales).
+
+\medskip
+\textbf{2) Option evidence (fit and dynamics).} Compare a rough model (rBergomi / rough Heston) with a conventional SV model (Heston/SABR) on:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Static fit.} Pricing error across strikes and maturities for the same data day.
+  \item \textbf{Short-maturity smile/skew.} Rough models typically capture the observed short-end skew term structure more accurately.
+  \item \textbf{Dynamic performance.} Rolling re-calibration stability and out-of-sample hedging errors (delta/vega), not only in-sample fit.
+\end{itemize}
+
+\medskip
+\textbf{3) Link to arbitrage (risk-neutral modelling).} The comparison must be made under an arbitrage-free framework: both models should define a well-posed risk-neutral dynamics for the underlying and yield admissible option prices (no static arbitrage violations across strikes/maturities). Rough volatility can be embedded into no-arbitrage models via Volterra Gaussian drivers (fractional/rough kernels) while preserving positivity of variance and enabling calibration to the implied-vol surface.
+
+\medskip
+\textbf{4) Link to market impact (microstructure foundation).} Order flow is clustered and endogenous, well described by (near-critical) Hawkes processes. If prices react to signed order flow through \textbf{transient impact} kernels, then the aggregated activity/impact mechanism produces volatility with multi-scale dependence and rough sample paths in scaling limits. This provides an economic narrative: rough volatility is a macroscopic signature of high-frequency market activity and impact, not just a better curve fit.
+
+\medskip
+\textbf{Conclusion.} Rough volatility is ``superior'' if it (i) matches the robust \(H<1/2\) stylized fact in time series, (ii) improves option-surface fit/dynamics and hedging out-of-sample, and (iii) remains arbitrage-free and economically grounded via microstructure/impact mechanisms.
+\selectlanguage{french}
 \end{solutionbox}
 
 \begin{questionbox}{Q6 --- Commentaire d'article (10 pts)}
@@ -114,6 +140,36 @@ Summarize and comment the enclosed article in light of the course: results, stre
 \end{questionbox}
 
 \begin{solutionbox}{Q6}
-Utiliser le plan de l'Annale 2023, Q5 (résumé + critique + extensions). Vu le poids (10 pts), soigner la forme : titres, équations clés (2--3 max), tableau ``forces/faiblesses'', et une section ``expériences supplémentaires''.
+\selectlanguage{english}
+Because this is a 10-point question, your answer should read like a short, structured referee report: clear summary, explicit connections to the course, then a critical assessment with concrete improvements.
+
+\medskip
+\textbf{Summary (what the article claims).} The article tackles a precise financial question (prediction, volatility modelling, microstructure, execution, etc.) using a specific dataset (market, period, frequency). It proposes a model or empirical methodology, estimates/calibrates it, and reports quantitative results that support a central claim (better fit, better forecasts, economic value, structural interpretation).
+
+\medskip
+\textbf{Key results (what you should restate).} State the main outcomes in orders of magnitude: the size of the improvement relative to baselines, the key estimated parameters and their meaning, and the scope of robustness checks (other assets, other subperiods, other frequencies). If the article proposes a trading or execution strategy, translate the results into an implementable metric (Sharpe \emph{after} costs, Implementation Shortfall, capacity, drawdowns).
+
+\medskip
+\textbf{Links with the course (place it in the right framework).} Explain which course tools the paper relies on:
+\begin{itemize}[leftmargin=*]
+  \item CAPM/factor reasoning for risk premia;
+  \item regularization (Ridge/Lasso) for high-dimensional prediction;
+  \item realized measures / rough volatility for volatility modelling;
+  \item Hawkes/queue-reactive models for order flow;
+  \item Almgren--Chriss or transient-impact kernels for market impact and execution.
+\end{itemize}
+
+\medskip
+\textbf{Strengths.} A strong paper has (i) a credible identification strategy, (ii) honest out-of-sample evaluation with meaningful baselines, (iii) uncertainty quantification (confidence intervals) and parameter stability checks, and (iv) metrics aligned with the goal (log-likelihood for point processes, option pricing/hedging error for derivatives, IS/impact for execution).
+
+\medskip
+\textbf{Weaknesses / limitations.} Typical weaknesses are: endogeneity (especially in impact/execution), microstructure noise and sampling bias, non-stationarity/regime shifts, data snooping and multiple testing, and the omission of transaction costs/impact/latency when translating statistical gains into economic gains.
+
+\medskip
+\textbf{Improvements (2--4 concrete experiments).} Propose experiments that would strengthen the claim: walk-forward (time-respecting) validation; stronger baselines; regime-dependent estimation; microstructure-robust estimators; statistical comparison tests (Diebold--Mariano); and full cost/impact-aware backtests if there is a strategy component. If the model is structural, add sensitivity/identification checks and stress scenarios.
+
+\medskip
+\textbf{Conclusion.} The article is convincing if the result survives out-of-sample validation, remains economically meaningful after costs/impact, and relies on assumptions that remain credible under microstructure effects and non-stationarity.
+\selectlanguage{french}
 \end{solutionbox}
 

@@ -208,50 +208,102 @@ Vous devez acheter en 8h 600\,000 actions Herm\`es et 300\,000 actions LVMH \`a 
 \end{questionbox}
 
 \begin{solutionbox}{Q6}
-\textbf{Traduction du problème.} Exécution optimale avec contraintes de temps, de risque (variance du coût), et d'impact marché. On veut minimiser un critère de type
+\selectlanguage{english}
+\textbf{What the question is really about.} You must execute two large buy metaorders over a fixed horizon \(T=8\) hours using transaction/order-flow/order-book data. The core is \textbf{optimal execution under market impact} (expected cost) and \textbf{execution risk} (price volatility while you still hold inventory). A standard objective is
 \[
-\min_{\text{stratégie}}\ \E[\text{coût}] + \eta\,\Var(\text{coût}),
+\min_{\text{execution strategy}}\ \E[\mathrm{IS}] + \lambda\,\Var(\mathrm{IS}),
 \]
-où $\eta$ reflète l'aversion au risque d'exécution.
+where \(\mathrm{IS}\) is \emph{Implementation Shortfall} and \(\lambda>0\) encodes urgency / risk aversion (large \(\lambda\) means more front-loading).
 
 \medskip
-\textbf{1) Mesures de base à partir des données.}
+\textbf{1) First diagnostics from data (liquidity and risk).}
 \begin{itemize}[leftmargin=*]
-  \item \textbf{Liquidité} : spread, profondeur (volume) aux meilleurs niveaux, courbe d'impact empirique (slippage vs participation), volumes échangés par pas de temps.
-  \item \textbf{Volatilité intrajournalière} et profils (U-shape).
-  \item \textbf{Microstructure} : autocorrélations des signes, déséquilibre (imbalance) du carnet, intensités d'arrivée/annulation.
+  \item \textbf{Volume/liquidity profile.} Intraday volume curve (U-shape), ADV, fraction \(Q/\mathrm{ADV}\), feasible participation caps, spread in ticks and in bps, depth at best and depth by level, resiliency (replenishment time).
+  \item \textbf{Volatility and correlation.} Intraday \(\sigma(t)\) (realized vol). With two names, estimate the return covariance \(\Sigma\) (Herm\`es--LVMH) because execution risk is portfolio risk during the schedule.
+  \item \textbf{Microstructure state variables.} Order-book imbalance, short-term sign autocorrelation, and event intensities (arrivals/cancellations), by time-of-day bucket.
+  \item \textbf{Empirical impact curves.} Temporary impact (slippage) versus participation \(v_t/V_t\) and spread/depth; permanent impact versus signed volume on a medium horizon (with endogeneity caveats).
 \end{itemize}
 
 \medskip
-\textbf{2) Modèle d'impact + exécution optimale (Almgren--Chriss).}
+\textbf{2) Almgren--Chriss model (impact + optimal schedule) --- detailed.}
+
+\smallskip
+\textbf{(a) Discrete-time setup.} Split \([0,T]\) into \(N\) buckets of length \(\Delta t=T/N\). Let \(x_k\) be the shares bought in bucket \(k\), and \(q_k\) be remaining shares \emph{after} bucket \(k\):
+\[
+q_0=Q,\qquad q_k=q_{k-1}-x_k,\qquad q_N=0.
+\]
+Midprice with \textbf{permanent impact}:
+\[
+S_k=S_{k-1}+\sigma\sqrt{\Delta t}\,\varepsilon_k+\gamma x_k,
+\qquad \varepsilon_k\sim\mathcal N(0,1),
+\]
+and execution price with \textbf{temporary impact}:
+\[
+\tilde S_k=S_{k-1}+\eta\,\frac{x_k}{\Delta t}.
+\]
+Here \(\sigma\) is volatility, \(\gamma\ge 0\) permanent impact, \(\eta\ge 0\) temporary impact (linear version; power-law/convex variants are common in practice).
+
+\smallskip
+\textbf{(b) Implementation Shortfall decomposition.} Define
+\[
+\mathrm{IS}=\sum_{k=1}^N x_k\,\tilde S_k - Q S_0.
+\]
+In the AC framework one obtains (up to constants):
+\[
+\E[\mathrm{IS}]=\frac{\gamma}{2}Q^2+\eta\sum_{k=1}^N \frac{x_k^2}{\Delta t},
+\qquad
+\Var(\mathrm{IS})\approx \sigma^2\sum_{k=1}^N q_{k-1}^2\,\Delta t.
+\]
+Interpretation: permanent impact yields an unavoidable \(\frac{\gamma}{2}Q^2\) term (given total size), temporary impact penalizes speed, and the variance term penalizes keeping inventory for long.
+
+\smallskip
+\textbf{(c) AC optimization problem and solution shape.} The mean--variance problem becomes the deterministic quadratic program
+\[
+\min_{(x_k)}\ \eta\sum_{k=1}^N \frac{x_k^2}{\Delta t} + \lambda\,\sigma^2\sum_{k=1}^N q_{k-1}^2\,\Delta t
+\quad\text{s.t.}\quad q_k=q_{k-1}-x_k,\ q_0=Q,\ q_N=0.
+\]
+The FOCs give a second-order linear difference equation whose solution is \textbf{front-loaded} when \(\lambda\sigma^2\) is large and \textbf{smoother} when \(\eta\) is large. In continuous time the classical closed form is
+\[
+q(t)=Q\,\frac{\sinh(\kappa (T-t))}{\sinh(\kappa T)},
+\qquad
+v(t)=-\dot q(t)=Q\,\kappa\,\frac{\cosh(\kappa (T-t))}{\sinh(\kappa T)},
+\qquad
+\kappa=\sqrt{\frac{\lambda\sigma^2}{\eta}}.
+\]
+
+\smallskip
+\textbf{(d) Two-asset ``portfolio liquidity'' extension.} With \(q(t)\in\R^2\), covariance \(\Sigma\), and temporary-impact matrix \(H\), a standard extension is
+\[
+\min_{v(\cdot)}\int_0^T \Big(v(t)^\trans H\,v(t)+\lambda\,q(t)^\trans\Sigma\,q(t)\Big)\,dt
+\quad\text{s.t.}\quad \dot q(t)=-v(t),\ q(0)=Q,\ q(T)=0.
+\]
+Correlation (via \(\Sigma\)) couples the two schedules through risk; cross-impact (via \(H\)) couples them through liquidity.
+
+\medskip
+\textbf{3) Order-book level modelling (if you must choose market vs limit orders).}
 \begin{itemize}[leftmargin=*]
-  \item Trajectoire d'inventaire $q_t$ (actions restantes), contrôle $v_t=-\dot q_t$.
-  \item Impact \emph{temporaire} (coût de traverser le carnet) et \emph{permanent} (déplacement du mid) :
-  \[
-  dS_t = \sigma\,dW_t + g(v_t)\,dt,\qquad \text{coût} \approx \int_0^T \big( \underbrace{h(v_t)}_{\text{temporaire}} + \underbrace{g(v_t) q_t}_{\text{permanent}} \big)\,dt.
-  \]
-  \item Résout un problème de contrôle stochastique; donne une politique proche de ``VWAP modifié'' (plus agressif si risque/volatilité élevé, plus doux si impact élevé).
+  \item \textbf{Point processes (Poisson/Hawkes).} Model arrivals of market/limit/cancel events; estimate by MLE; validate via time-rescaling diagnostics.
+  \item \textbf{Queue-reactive models.} State = best bid/ask queue sizes; intensities depend on the state; outputs: fill probability and waiting-time distribution for a limit order.
+  \item \textbf{Adverse selection.} Condition fill probability and post-fill price moves on imbalance/order-flow to choose the market/limit mix.
 \end{itemize}
 
 \medskip
-\textbf{3) Modèles de carnet (HFT) si on veut agir au niveau des ordres limites.}
+\textbf{4) Calibration (what parameters you estimate).}
 \begin{itemize}[leftmargin=*]
-  \item \textbf{Processus ponctuels} (Poisson/Hawkes) pour arrivées d'ordres marché/limites/annulations.
-  \item \textbf{Queue-reactive} (Markov) : état = tailles de files aux meilleures limites; intensités dépendant de l'état.
-  \item Objectif : estimer la probabilité d'exécution d'un ordre limite, le risque de sélection adverse, et optimiser le mix market/limit.
+  \item \textbf{\(\sigma(t)\).} Realized volatility by time-of-day.
+  \item \textbf{Temporary impact (\(\eta\)).} Regress signed slippage on participation rate \(v_t/V_t\) and spread/depth controls (often a power law rather than linear).
+  \item \textbf{Permanent impact (\(\gamma\)).} Estimate on longer horizons; treat endogeneity carefully (instruments or metaorder datasets).
+  \item \textbf{Risk aversion (\(\lambda\)).} Choose from an explicit risk constraint (e.g.\ P95/CVaR of cost) and a benchmark (VWAP/IS).
 \end{itemize}
 
 \medskip
-\textbf{4) Calibration.} Estimer $g,h$ sur données (régression du slippage sur participation, non-linéarités), estimer intensités Hawkes via maximum de vraisemblance, valider sur périodes hors-échantillon.
-
-\medskip
-\textbf{5) Backtests / tests.} Toujours comparer à des benchmarks :
+\textbf{5) Backtests / benchmarks.} Always compare to TWAP/VWAP/POV and report:
 \begin{itemize}[leftmargin=*]
-  \item \textbf{Benchmarks} : VWAP, TWAP, POV (percentage of volume), Implementation Shortfall.
-  \item \textbf{Metrics} : coût moyen (bps), variance, tail risk (CVaR), taux de complétion, drawdown intrajournalier, exposition à l'impact permanent.
-  \item \textbf{Stress tests} : journées volatiles, annonces, liquidité basse.
-  \item \textbf{AB tests} / replay du carnet si disponible.
+  \item \textbf{Cost.} Implementation Shortfall (bps), effective spread paid, temporary vs permanent impact decomposition.
+  \item \textbf{Risk.} Cost volatility and tail risk (P95/CVaR), completion risk.
+  \item \textbf{Robustness.} Low-liquidity days, announcements, regime shifts; out-of-sample walk-forward evaluation.
 \end{itemize}
+\selectlanguage{french}
 \end{solutionbox}
 
 \begin{questionbox}{Q7 --- Tick value}
@@ -280,40 +332,64 @@ From a time series of prices (high frequency data over several years), how would
 \end{questionbox}
 
 \begin{solutionbox}{Q8}
-\textbf{(a) Montrer la ``roughness'' sur données.} On ne voit pas directement $\sigma_t$ ; on construit un proxy de volatilité (réalisée).
-\begin{itemize}[leftmargin=*]
-  \item Calculer \textbf{volatilité réalisée} sur fenêtres $\Delta$ : $RV_{t,\Delta}=\sum_{j=1}^{m} r_{t+j\delta}^2$ avec $\delta$ très petit et $m\delta=\Delta$.
-  \item Travailler sur $\log RV_{t,\Delta}$ (plus proche d'un processus gaussien).
-  \item Estimer la loi d'échelle du \textbf{variogramme} :
+\selectlanguage{english}
+\textbf{Goal.} Explain (i) how to \emph{measure} roughness from high-frequency data, (ii) why rough volatility improves option modelling, (iii) what microstructure mechanisms can generate it, and (iv) how this is expressed mathematically.
+
+\medskip
+\textbf{(a) How to show volatility is rough from data (full pipeline).}
+\begin{enumerate}[leftmargin=*,label=\arabic*)]
+  \item \textbf{Build a volatility proxy.} From high-frequency prices, form intraday returns \(r_{t,j}\) on a sampling grid (use microstructure-robust sampling / pre-averaging if needed). Over a window of length \(\Delta\) compute realized variance:
   \[
-  \mathcal{V}(h)=\E\big[(\log RV_{t+h}-\log RV_t)^2\big] \approx C\,h^{2H}
+  RV_{t,\Delta}=\sum_{j=1}^{m} r_{t,j}^2,\qquad m\delta=\Delta.
   \]
-  sur une plage d'échelles (minutes à jours). On fait une régression $\log \widehat{\mathcal{V}}(h)$ vs $\log h$; la pente donne $2H$.
-  \item Rough volatility $\iff H\in(0,1/2)$ (typiquement $H\approx 0.1$).
-\end{itemize}
+  \item \textbf{Work on log-volatility.} Use \(X_t=\log RV_{t,\Delta}\). Empirically, \(X_t\) is closer to a Gaussian process with stationary increments.
+  \item \textbf{Estimate the variogram scaling.} For lags \(h\) (minutes to days), estimate
+  \[
+  \widehat{\mathcal V}(h)=\frac{1}{T_h}\sum_{t} (X_{t+h}-X_t)^2.
+  \]
+  Rough volatility predicts a power law
+  \[
+  \mathcal V(h)=\E[(X_{t+h}-X_t)^2]\approx C\,h^{2H}\quad\text{with }H\in(0,1/2).
+  \]
+  Regress \(\log \widehat{\mathcal V}(h)\) on \(\log h\); the slope estimates \(2H\). In many assets one finds \(H\approx 0.05\)--\(0.2\).
+  \item \textbf{Robustness checks.} Repeat across assets, across subperiods, and across sampling schemes; verify the slope is stable and significantly \(<1\) (i.e.\ \(H<1/2\)). Check microstructure sensitivity at very small \(\delta\).
+\end{enumerate}
 
 \medskip
-\textbf{(b) Pourquoi les modèles rough sont meilleurs (options).}
+\textbf{(b) Why rough volatility is superior to classical SV models for options.}
 \begin{itemize}[leftmargin=*]
-  \item Ils reproduisent mieux \textbf{la pente du smile} à court terme et la \textbf{dynamique} des surfaces de volatilité.
-  \item Meilleure description des \textbf{autocorrélations} de la volatilité (mémoire).
-  \item En calibration, ils capturent la régularité observée sans imposer une diffusion Markovienne trop lisse.
+  \item \textbf{Short-maturity implied vol.} Classical Markov diffusions (e.g.\ Heston) are too smooth at short times; rough volatility naturally produces a more realistic short-end skew term structure.
+  \item \textbf{Surface dynamics / hedging.} Rough models better match the time evolution of the implied-vol surface, which typically improves out-of-sample pricing and hedging performance when compared fairly.
+  \item \textbf{Parsimony.} They capture observed multi-scale behaviour with few parameters (notably \(H\)), instead of adding many factors/regimes.
 \end{itemize}
 
 \medskip
-\textbf{(c) Fondations microstructurelles (idée).} L'activité de marché (arrivées d'ordres) est auto-excitée et proche d'un régime critique.
+\textbf{(c) Microstructural foundations (Hawkes + impact $\Rightarrow$ rough).}
 \begin{itemize}[leftmargin=*]
-  \item Modéliser les ordres (buy/sell) par des \textbf{Hawkes} presque instables (branching ratio proche de 1).
-  \item Dans une limite d'échelle (temps s'accélère), l'impact agrégé de l'ordre flow converge vers un \textbf{processus Volterra} (fractional/rough) pour la volatilité.
+  \item \textbf{Order-flow clustering.} Model event arrivals with Hawkes:
+  \[
+  \lambda_t=\mu+\int_0^t \phi(t-s)\,dN_s,\qquad \phi\ge 0.
+  \]
+  When the branching ratio \(m=\int_0^\infty \phi(u)\,du\) is close to 1 (near-criticality), activity becomes highly persistent across scales.
+  \item \textbf{Transient market impact.} Let price react to signed order flow through a decaying kernel \(G\):
+  \[
+  P_t = P_0 + \int_0^t G(t-s)\,dQ_s,
+  \]
+  with \(Q\) signed volume. Near-critical order flow plus transient impact yields a scaling limit where volatility behaves like a Volterra/fractional process with \(H<1/2\).
 \end{itemize}
 
 \medskip
-\textbf{(d) Forme mathématique rough (exemple).} Un modèle type rBergomi :
+\textbf{(d) A clean mathematical representation (Volterra / rough kernel).}
+Rough volatility is often written with a Volterra Gaussian driver:
 \[
-v_t = \xi_0(t)\exp\Big(\eta\,W_t^{H} - \tfrac12\eta^2 t^{2H}\Big),
-\qquad
-W_t^H=\int_0^t K_H(t-s)\,dW_s,\quad K_H(u)\propto u^{H-\frac12}.
+W_t^H=\int_0^t K_H(t-s)\,dW_s,
+\qquad K_H(u)=c_H\,u^{H-\frac12},\qquad H\in(0,1/2),
 \]
-Le noyau singulier $u^{H-1/2}$ rend $v$ ``rough'' si $H<1/2$.
+and a (lognormal) variance process such as rBergomi:
+\[
+v_t=\xi_0(t)\exp\!\Big(\eta W_t^H-\tfrac12\eta^2 t^{2H}\Big).
+\]
+Because \(K_H(u)\) is singular as \(u\downarrow 0\) when \(H<1/2\), the paths of \(W^H\) (and hence \(v_t\)) are much less regular than Markov diffusions: this is the precise mathematical meaning of ``rough''.
+\selectlanguage{french}
 \end{solutionbox}
 

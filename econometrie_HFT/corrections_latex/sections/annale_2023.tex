@@ -37,27 +37,37 @@ Based on the elements seen in the lectures, comment in a critical way the enclos
 \end{questionbox}
 
 \begin{solutionbox}{Q5}
-\textbf{Attention :} l'article joint varie selon l'année; ce qui est noté est la capacité à (i) résumer, (ii) relier au cours, (iii) critiquer et proposer des améliorations.
+\selectlanguage{english}
+The goal in an ``article comment'' is not to reproduce proofs: it is to demonstrate that you can (i) restate the research question and the contribution clearly, (ii) connect the approach to the main ideas from the course, and (iii) evaluate the results with the right econometric and microstructure caveats (endogeneity, microstructure noise, transaction costs, regime dependence), while proposing realistic improvements.
 
 \medskip
-\textbf{Plan de commentaire (structure ``copiable'' en examen).}
-\begin{enumerate}[leftmargin=*,label=\arabic*)]
-  \item \textbf{Objectif et question de recherche.} Qu'essaie de mesurer/prédire l'article ? Quel marché/données ?
-  \item \textbf{Données et prétraitements.} Horizon, fréquence, nettoyage, biais (survivorship, microstructure).
-  \item \textbf{Modèle / méthode.} Hypothèses, variables, équations clés, estimation/calibration.
-  \item \textbf{Résultats principaux.} Signes, ordres de grandeur, robustesse.
-  \item \textbf{Forces.} Simplicité, interprétabilité, lien microstructure, performance out-of-sample, etc.
-  \item \textbf{Faiblesses/limites.} Hypothèses fortes, endogénéité, surapprentissage, manque de tests, instabilité de paramètres, coût de transaction ignoré.
-  \item \textbf{Extensions.} Ajouter frictions, régimes, multi-actifs, backtest exécution, benchmarks, tests statistiques (Diebold--Mariano), incertitude paramètres.
-\end{enumerate}
+\textbf{Summary (what the paper does).} The paper studies a precise financial question (forecasting returns/volatility/liquidity, modelling order flow or impact, pricing/hedging, etc.) on a clearly defined dataset (asset class, period, frequency). The authors propose a model or empirical strategy, estimate/calibrate it on the data, and report a set of quantitative results (fit, predictive power, economic value, or structural parameters) together with some robustness checks.
 
 \medskip
-\textbf{Checklist ``critique quantitative''.}
+\textbf{Methodology (how it does it).} At a high level, most papers in this course fall into one of the following families:
 \begin{itemize}[leftmargin=*]
-  \item Quelle est la \textbf{métrique} (MSE, loglik, Sharpe, IS) ? Est-elle alignée avec l'objectif ?
-  \item Quelle est la \textbf{baseline} (naïf/VWAP/BS/Heston) ?
-  \item Robustesse : autres périodes, autres actifs, autres fréquences, \textbf{coûts} et \textbf{impact}.
-  \item Significativité : intervalles de confiance, tests de stabilité, multiple testing.
+  \item \textbf{Factor/return regressions.} Linear or regularized (Ridge/Lasso) prediction with walk-forward evaluation; main issues: data snooping, instability, and transaction costs.
+  \item \textbf{Volatility models.} Classical SV (Heston-type), rough volatility (Volterra/fractional), or realized-volatility regressions; main issues: microstructure noise and scale effects.
+  \item \textbf{Point-process microstructure.} Poisson/Hawkes/queue-reactive dynamics for order arrivals; main issues: goodness-of-fit (time-rescaling), non-stationarity, and state dependence.
+  \item \textbf{Impact / execution.} Almgren--Chriss-type objectives (IS + risk) or transient-impact kernels; main issues: endogeneity (trades respond to information) and disentangling permanent vs temporary impact.
 \end{itemize}
+In each case, the key is to state the assumptions (stationarity, independence, parametric form), the objective (predictive accuracy, no-arbitrage pricing, execution cost), and the validation protocol (out-of-sample, baselines, significance).
+
+\medskip
+\textbf{Main results (what you should report).} The results section should be summarized with orders of magnitude, not only signs. A good exam answer states: the main estimated parameters and what they mean economically; the gain relative to a baseline (MSE/log-likelihood improvement, pricing error reduction, hedging error reduction, or improved execution cost); and which robustness checks support the claim (other assets, other periods, other frequencies, regime splits).
+
+\medskip
+\textbf{Critical assessment (strengths and weaknesses).}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Strengths.} The approach is coherent with a course framework (e.g.\ a no-arbitrage volatility model, a microstructure-consistent Hawkes model, or an execution objective aligned with Implementation Shortfall). The methodology is transparent and produces interpretable parameters. The evaluation uses out-of-sample tests and compares against meaningful baselines.
+  \item \textbf{Weaknesses / limitations.} The most common issues are (i) \textbf{endogeneity} (order flow and prices co-determine each other; impact estimation is biased if trades are informed), (ii) \textbf{microstructure noise} and sampling bias at high frequency, (iii) \textbf{non-stationarity/regime changes} (parameters drift intraday and across market conditions), (iv) \textbf{overfitting} (many hyperparameters, multiple testing), and (v) \textbf{economic feasibility} (ignoring transaction costs, slippage, latency, or market impact when claiming alpha).
+\end{itemize}
+
+\medskip
+\textbf{Concrete improvements / extensions (high-scoring).} A strong conclusion proposes a small number of realistic extensions tied to the paper's goal, for instance: add transaction-cost and impact-aware evaluation; use a walk-forward scheme and a Diebold--Mariano test versus baselines; report confidence intervals and stability diagnostics; add regime dependence (volatility/liquidity buckets); incorporate microstructure-robust estimators; or move from a reduced-form regression to a structural model (e.g.\ linking Hawkes order flow to transient impact, or linking rough volatility to a Volterra driver).
+
+\medskip
+\textbf{Final takeaway.} Overall, the paper is convincing if the gain is robust \emph{and} economically meaningful after costs/impact, and if the identification assumptions are credible given microstructure and endogeneity. If those points are not addressed, the statistical fit alone is not sufficient to conclude that the method is superior in practice.
+\selectlanguage{french}
 \end{solutionbox}
 
